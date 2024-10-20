@@ -36,7 +36,7 @@ function App() {
             required
           />
           <div className="forgot-password">
-            <a href="#">Forgot password?</a>
+            <a href="/forgot-password">Forgot password?</a>
           </div>
           <button type="submit" className="login-button">LOGIN</button>
         </form>
