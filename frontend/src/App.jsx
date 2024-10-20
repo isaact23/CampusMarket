@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css'; // Use App.css for the styles
+import { login } from './login.js'
 
 function App() {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ function App() {
     e.preventDefault();
     // Add logic to handle login here
     console.log('Email:', email, 'Password:', password);
+    console.log(login(email, password));
   };
 
   return (
@@ -50,5 +52,3 @@ function App() {
 }
 
 export default App;
-
-
