@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import './App.css'; // Use App.css for the styles
-import { login } from './login.js'
+import './Login.css';
+import { login } from './authApi.js';
 
-function App() {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Add logic to handle login here
+
     console.log('Email:', email, 'Password:', password);
     console.log(login(email, password));
   };
@@ -43,7 +43,7 @@ function App() {
           <button type="submit" className="login-button">LOGIN</button>
         </form>
         <p>
-        Don’t have an account? <a href="/create-account">Create one here</a>
+        Don’t have an account? <a href="/register">Create one here</a>
       </p>
         
       </div>
@@ -51,4 +51,4 @@ function App() {
   );
 }
 
-export default App;
+export default Login;
