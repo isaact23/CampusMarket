@@ -1,11 +1,18 @@
 import axios from 'axios';
 
 export const register = async (username, email, password) => {
-    try {
-        const response = await axios.post('/api/register', {
+    console.log("Handling registration")
+    console.log('Username:', username, 'Email:', email, 'Password:', password);
+
+    // TODO: Implement registration via django
+
+    /*try {
+        const response = await axios.post('/loginAPI/api/register', {
             username: username,
             email: email,
-            password: password
+            password: password,
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET
         })
         console.log("Account created successfully")
         console.log(response)
@@ -13,17 +20,21 @@ export const register = async (username, email, password) => {
     } catch (error) {
         console.error("Account creation failed:", error)
         return null
-    }
+    }*/
 }
 
 export const login = async (username, password) => {
-    try {
-        const response = await axios.post('/login/oauth/token', {
-            grant_type: 'password',
+    console.log("Handling login")
+    console.log('Email:', email, 'Password:', password);
+
+    // TODO: Implement logging in via django
+
+    /*try {
+        const response = await axios.post('/loginAPI/authorize', {
+            response_type: 'token',
             username: username,
             password: password,
-            client_id: '7yFnbiDquoRvw8Xwdxncdo2YBpSEHpqq',
-            client_secret: 'VVHVDJfKWsX2u9rcJwDEyL5wvSJxJ3yTmX3aDkm01fFZowNbsiIaot5SPxwAg1Y9'
+            client_id: CLIENT_ID
         });
         console.log("Logged in successfully")
         console.log(response.data)
@@ -31,5 +42,5 @@ export const login = async (username, password) => {
     } catch (error) {
         console.error("Log in failed:", error);
         return null;
-    }
+    }*/
 };

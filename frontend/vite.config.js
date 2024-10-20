@@ -6,10 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/login': {
+      '/loginAPI': {
         target: 'https://dev-wwzvhvto6t4diopr.us.auth0.com',
         changeOrigin: true,
-        secure: false
+        secure: true
       }
     }
   }

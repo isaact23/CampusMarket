@@ -8,9 +8,8 @@ function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-
-    console.log('Email:', email, 'Password:', password);
-    console.log(login(email, password));
+    
+    login(email, password);
   };
 
   return (

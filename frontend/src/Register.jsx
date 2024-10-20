@@ -10,8 +10,7 @@ function Register() {
   const handleRegister = (e) => {
     e.preventDefault();
 
-    console.log('Username:', username, 'Email:', email, 'Password:', password);
-    console.log(register(username, email, password));
+    register(username, email, password);
   };
 
   return (

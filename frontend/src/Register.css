@@ -1,4 +1,5 @@
-/* App.css */
+/* Register.css */
+
 body {
   margin: 0;
   padding: 0;
@@ -10,14 +11,14 @@ body {
   align-items: center;
 }
 
-.login-container {
+.register-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
 
-.login-box {
+.register-box {
   width: 350px;
   padding: 40px;
   background-color: white;
@@ -26,14 +27,14 @@ body {
   text-align: center;
 }
 
-.login-box h2 {
+.register-box h2 {
   margin-bottom: 20px;
   font-weight: bold;
   font-size: 30px;
-  color: #205e1a;
+  color: #205e1a; /* Update color if desired */
 }
 
-.login-box label {
+.register-box label {
   display: block;
   text-align: left;
   font-size: 14px;
@@ -41,7 +42,7 @@ body {
   margin-bottom: 5px;
 }
 
-.login-box input {
+.register-box input {
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
@@ -54,6 +55,7 @@ body {
 .forgot-password {
   text-align: right;
   margin-bottom: 20px;
+  /* Remove this section if not needed */
 }
 
 .forgot-password a {
@@ -62,7 +64,7 @@ body {
   text-decoration: none;
 }
 
-.login-button {
+.register-button {
   width: 100%;
   padding: 10px;
   background: linear-gradient(135deg, #57c657, #2c5639); /* Gradient button */
@@ -73,41 +75,11 @@ body {
   cursor: pointer;
 }
 
-.login-button:hover {
+.register-button:hover {
   background: linear-gradient(135deg, #5b7dfa, #916fd4);
 }
 
+/* Remove these sections if not needed for Register */
 .social-login {
   margin-top: 20px;
-}
-
-.social-login p {
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
-.social-icons a {
-  margin: 0 10px;
-  color: #333;
-  font-size: 18px;
-  text-decoration: none;
-}
-
-.social-icons a:hover {
-  color: #104e0a;
-}
-
-.login-box p {
-  margin-top: 20px;
-  font-size: 14px;
-  color: #777;
-}
-
-.login-box a {
-  color: #14591f;
-  text-decoration: none;
-}
-
-.login-box a:hover {
-  text-decoration: underline;
 }
