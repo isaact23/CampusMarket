@@ -1,0 +1,43 @@
+/* frontend/src/components/NotFound.css */
+.not-found-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .not-found-box {
+    width: 350px;
+    padding: 40px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .not-found-box h2 {
+    font-size: 60px;
+    color: #205e1a;
+    margin: 0;
+  }
+  
+  .not-found-box h3 {
+    color: #205e1a;
+    margin: 10px 0;
+  }
+  
+  .back-button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #57c657, #2c5639);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .back-button:hover {
+    background: linear-gradient(135deg, #5b7dfa, #916fd4);
+  }
