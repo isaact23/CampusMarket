@@ -1,0 +1,83 @@
+/* frontend/src/components/ConnectionTest.css */
+.test-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .test-box {
+    width: 400px;
+    padding: 40px;
+    background-color: white;
+    color:black;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .test-box h2,
+  .test-box h3 {
+    color: #205e1a;
+    margin-bottom: 20px;
+  }
+  
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .test-button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #57c657, #2c5639);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .test-button:hover {
+    background: linear-gradient(135deg, #5b7dfa, #916fd4);
+  }
+  
+  .test-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .loading {
+    color: #666;
+  }
+  
+  .error {
+    color: #ff4444;
+  }
+  
+  .response-container {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .response-data {
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  
+  .back-link {
+    color: #205e1a;
+    text-decoration: none;
+    margin-top: 20px;
+    display: inline-block;
+  }
+  
+  .back-link:hover {
+    text-decoration: underline;
+  }

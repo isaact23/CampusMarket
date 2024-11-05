@@ -1,6 +1,7 @@
-// src/components/ConnectionTest.jsx
+// frontend/src/components/ConnectionTest.jsx
 import { useState } from 'react'
 import { api } from '../services/api'
+import './ConnectionTest.css';
 
 function ConnectionTest() {
   const [getResponse, setGetResponse] = useState(null)
@@ -8,6 +9,7 @@ function ConnectionTest() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // Add these functions back
   const testGet = async () => {
     setLoading(true)
     setError(null)
@@ -36,35 +38,53 @@ function ConnectionTest() {
   }
 
   return (
-    <div>
-      <h2>Connection Test</h2>
-      <div>
-        <button onClick={testGet} disabled={loading}>
-          Test GET Request
-        </button>
-        <button onClick={testPost} disabled={loading}>
-          Test POST Request
-        </button>
+    <div className="test-container">
+      <div className="test-box">
+        <h2>API Connection Test</h2>
+        <div className="button-container">
+          <button
+            onClick={testGet}
+            disabled={loading}
+            className="test-button"
+          >
+            Test GET Request
+          </button>
+          <button
+            onClick={testPost}
+            disabled={loading}
+            className="test-button"
+          >
+            Test POST Request
+          </button>
+        </div>
+       
+        {loading && <p className="loading">Loading...</p>}
+        {error && <p className="error">Error: {error}</p>}
+       
+        {getResponse && (
+          <div className="response-container">
+            <h3>GET Response:</h3>
+            <pre className="response-data">
+              {JSON.stringify(getResponse, null, 2)}
+            </pre>
+          </div>
+        )}
+       
+        {postResponse && (
+          <div className="response-container">
+            <h3>POST Response:</h3>
+            <pre className="response-data">
+              {JSON.stringify(postResponse, null, 2)}
+            </pre>
+          </div>
+        )}
+       
+        <p>
+          <a href="/login" className="back-link">Back to Login</a>
+        </p>
       </div>
-      
-      {loading && <p>Loading...</p>}
-      {error && <p style={{color: 'red'}}>Error: {error}</p>}
-      
-      {getResponse && (
-        <div>
-          <h3>GET Response:</h3>
-          <pre>{JSON.stringify(getResponse, null, 2)}</pre>
-        </div>
-      )}
-      
-      {postResponse && (
-        <div>
-          <h3>POST Response:</h3>
-          <pre>{JSON.stringify(postResponse, null, 2)}</pre>
-        </div>
-      )}
     </div>
-  )
+  );
 }
 
-export default ConnectionTest
+export default ConnectionTest;
