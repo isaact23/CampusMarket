@@ -9,7 +9,6 @@ function ConnectionTest() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // Add these functions back
   const testGet = async () => {
     setLoading(true)
     setError(null)
