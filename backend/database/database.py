@@ -1,4 +1,3 @@
-import os
 import pyodbc, struct
 from azure import identity
 from azure_keys import AZURE_SQL_CONNECTIONSTRING
@@ -220,12 +219,10 @@ def get_conn():
         return conn
     
     except pyodbc.OperationalError:
-        print("Failed to connect to Azure")
-        return None
+        raise RuntimeError("Failed to connect to Azure")
 
 print("Authenticating into database")
 conn = get_conn()
-if conn is not None:
-    print("Authenticated into database")
+print("Authenticated into database")
 
 print(add_user(User("shuffles")))
