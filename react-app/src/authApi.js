@@ -6,13 +6,11 @@ export const register = async (username, email, password) => {
 
     // TODO: Implement registration via django
 
-    /*try {
-        const response = await axios.post('/loginAPI/api/register', {
+    try {
+        const response = await axios.post('/api/register', {
             username: username,
             email: email,
-            password: password,
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET
+            password: password
         })
         console.log("Account created successfully")
         console.log(response)
@@ -20,7 +18,7 @@ export const register = async (username, email, password) => {
     } catch (error) {
         console.error("Account creation failed:", error)
         return null
-    }*/
+    }
 }
 
 export const login = async (username, password) => {

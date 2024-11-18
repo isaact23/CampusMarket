@@ -4,13 +4,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "go": "cd ../react-app && npm run build && cd ../node-server && node index.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.21.1",
+    "mssql": "^11.0.1",
     "path": "^0.12.7"
   }
 }
