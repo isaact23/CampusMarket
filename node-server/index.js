@@ -21,16 +21,16 @@ const server = app.listen(PORT, () => {
     console.log(`CampusMarket server listening on ${PORT}`)
 })
 
-function shutdown() {
-    database.close()
+async function shutdown() {
+    await database.close()
 
     server.close(err => {
         if (err) {
             console.error("Error shutting down express server:" + err)
-            exit(1)
+            process.exit(1)
         } else {
             console.log("Server shut down successfully")
-            exit(0)
+            process.exit(0)
         }
     })
 }

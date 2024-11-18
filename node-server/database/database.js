@@ -15,14 +15,22 @@ const config = {
 }
 
 export class Database {
+    poolConnection = null
 
     constructor() {
-        this.poolConnection = sql.connect(config)
-        console.log('Connected to database')
+        console.log("Connecting to Azure SQL...")
+        sql.connect(config)
+        .then(pool => {
+            this.poolConnection = pool
+            console.log("Connected to Azure SQL.")
+        })
+        .catch(() => {
+            console.error("Failed to connect to Azure SQL")
+        })
     }
     
-    close() {
-        this.poolConnection.close()
-        console.log('Disconnected from database')
+    async close() {
+        await this.poolConnection.close()
+        console.log("Closed database connection")
     }
 }
