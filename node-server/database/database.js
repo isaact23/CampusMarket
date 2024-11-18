@@ -14,17 +14,15 @@ const config = {
     }
 }
 
-console.log(config)
+export class Database {
 
-connect();
-
-async function connect() {
-    try {
-        var poolConnection = await sql.connect(config)
-        console.log('yay')
-        poolConnection.close()
+    constructor() {
+        this.poolConnection = sql.connect(config)
+        console.log('Connected to database')
     }
-    catch (err) {
-        console.error(err.message)
+    
+    close() {
+        this.poolConnection.close()
+        console.log('Disconnected from database')
     }
 }

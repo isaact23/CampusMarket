@@ -4,8 +4,6 @@ export const register = async (username, email, password) => {
     console.log("Handling registration")
     console.log('Username:', username, 'Email:', email, 'Password:', password);
 
-    // TODO: Implement registration via django
-
     try {
         const response = await axios.post('/api/register', {
             username: username,
@@ -21,24 +19,20 @@ export const register = async (username, email, password) => {
     }
 }
 
-export const login = async (username, password) => {
+export const login = async (email, password) => {
     console.log("Handling login")
     console.log('Email:', email, 'Password:', password);
 
-    // TODO: Implement logging in via django
-
-    /*try {
-        const response = await axios.post('/loginAPI/authorize', {
-            response_type: 'token',
-            username: username,
-            password: password,
-            client_id: CLIENT_ID
-        });
+    try {
+        const response = await axios.post('/api/login', {
+            email: email,
+            password: password
+        })
         console.log("Logged in successfully")
         console.log(response.data)
         return response.data;
     } catch (error) {
         console.error("Log in failed:", error);
         return null;
-    }*/
+    }
 };
