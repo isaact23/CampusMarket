@@ -61,8 +61,27 @@ export class Database {
     }
 
     // Lookup a product by ID and return a Product object.
+    // Return null if not found.
     async lookupProduct(id) {
-        throw new Error("Not impl")
+        this.checkConnection()
+
+        // Query database
+        let req = this.poolConnection.request()
+        req.input('id', sql.Int, id)
+        let res = await req.query(
+            `SELECT * FROM dbo.Products WHERE ID = @id`
+        )
+
+        // Handle item not found
+        if (res.rowsAffected[0] != 1) {
+            return null
+        }
+
+        // Create and populate Product object
+        const rec = res.recordset[0]
+        const product = new Product(rec.Name, rec.Description, rec.Price, rec.OwnerID)
+        product.setID(rec.ID)
+        return product
     }
 
     // Delete a product by ID.
@@ -112,8 +131,27 @@ export class Database {
     }
 
     // Lookup a user by ID and return the User data.
+    // Return null if not found.
     async lookupUser(id) {
-        throw new Error("Not impl")
+        this.checkConnection()
+
+        // Query database
+        let req = this.poolConnection.request()
+        req.input('id', sql.Int, id)
+        let res = await req.query(
+            `SELECT * FROM dbo.Users WHERE ID = @id`
+        )
+
+        // Handle item not found
+        if (res.rowsAffected[0] != 1) {
+            return null
+        }
+
+        // Create and populate User object
+        const rec = res.recordset[0]
+        const user = new User(rec.Username, rec.Email, null)
+        user.setID(rec.ID)
+        return user
     }
 
     // Delete a user by ID.
@@ -146,8 +184,27 @@ export class Database {
     }
 
     // Lookup a message by ID and return a Message object.
+    // Return null if not found.
     async lookupMessage(id) {
-        throw new Error("Not impl")
+        this.checkConnection()
+
+        // Query database
+        let req = this.poolConnection.request()
+        req.input('id', sql.Int, id)
+        let res = await req.query(
+            `SELECT * FROM dbo.Messages WHERE ID = @id`
+        )
+
+        // Handle item not found
+        if (res.rowsAffected[0] != 1) {
+            return null
+        }
+
+        // Create and populate Message object
+        const rec = res.recordset[0]
+        const message = new Message(rec.ToID, rec.FromID, rec.Title, rec.Content)
+        message.setID(rec.ID)
+        return message
     }
 
     // Delete a message by ID.
@@ -179,13 +236,39 @@ export class Database {
     }
     
     // Lookup a transaction by ID and return a Transaction object.
+    // Return null if not found.
     async lookupTransaction(id) {
-        throw new Error("Not impl")
+        this.checkConnection()
+
+        // Query database
+        let req = this.poolConnection.request()
+        req.input('id', sql.Int, id)
+        let res = await req.query(
+            `SELECT * FROM dbo.Transactions WHERE ID = @id`
+        )
+
+        // Handle item not found
+        if (res.rowsAffected[0] != 1) {
+            return null
+        }
+
+        // Create and populate Transaction object
+        const rec = res.recordset[0]
+        const transaction = new Transaction(rec.ProductID, rec.BuyingUserID, rec.SellingUserID)
+        transaction.setID(rec.ID)
+        return transaction
     }
 
     async connect() {
         console.log("Connecting to Azure SQL...")
-        this.poolConnection = await sql.connect(config)
+        while (this.poolConnection == null) {
+            try {
+                this.poolConnection = await sql.connect(config)
+            }
+            catch {
+                console.log("Trying again to connect to Azure SQL...")
+            }
+        }
         console.log("Connected to Azure SQL.")
     }
 

@@ -6,19 +6,19 @@ export class Message {
         this.title = title
         this.content = content
     }
-    set_id(id) {
+    setID(id) {
         this.id = id
     }
 }
 
 export class Transaction {
-    constructor(product_id, buying_user_id, selling_user_id) {
+    constructor(product_id, buyer_id, seller_id) {
         this.id = null
         this.product_id = product_id
-        this.buyer_id = buying_user_id
-        this.seller_id = selling_user_id
+        this.buyer_id = buyer_id
+        this.seller_id = seller_id
     }
-    set_id(id) {
+    setID(id) {
         this.id = id
     }
 }
@@ -31,7 +31,7 @@ export class Product {
         this.price = price
         this.owner_id = owner_id
     }
-    set_id(id) {
+    setID(id) {
         this.id = id
     }
 }
@@ -43,7 +43,7 @@ export class User {
         this.email = email
         this.password = password
     }
-    set_id(id) {
+    setID(id) {
         this.id = id
     }
 }
