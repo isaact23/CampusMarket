@@ -1,4 +1,3 @@
-
 DROP TABLE dbo.Messages;
 DROP TABLE dbo.Transactions;
 DROP TABLE dbo.Products;
@@ -8,6 +7,7 @@ CREATE TABLE Users (
     ID int IDENTITY(1, 1),
     Username varchar(64) UNIQUE,
     Email varchar(320) UNIQUE,
+    Password varchar(128),
 
     PRIMARY KEY (ID)
 )

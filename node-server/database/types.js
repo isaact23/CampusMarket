@@ -15,8 +15,8 @@ export class Transaction {
     constructor(product_id, buying_user_id, selling_user_id) {
         this.id = null
         this.product_id = product_id
-        this.buying_user_id = buying_user_id
-        this.selling_user_id = selling_user_id
+        this.buyer_id = buying_user_id
+        this.seller_id = selling_user_id
     }
     set_id(id) {
         this.id = id
@@ -37,10 +37,11 @@ export class Product {
 }
 
 export class User {
-    constructor(username, email) {
+    constructor(username, email, password) {
         this.id = null
         this.username = username
         this.email = email
+        this.password = password
     }
     set_id(id) {
         this.id = id

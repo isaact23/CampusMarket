@@ -25,9 +25,9 @@ process.on('SIGTERM', shutdown)
 async function startup() {
     await database.connect()
 
-    //database.addProduct(new Product('Ice', 'Coolant stuff', 4.0, 1))
-    const newId = await database.addUser(new User("shuffles3", "shuffles@gmail.com"))
-    console.log("ID: ", newId)
+    database.addProduct(new Product('Ice', 'Coolant stuff', 4.0, 1))
+    //const newId = await database.addUser(new User("shuffles1", "shuffles2@gmail.com"))
+    //console.log("ID: ", newId)
 
     return app.listen(PORT, () => {
         console.log(`CampusMarket server listening on ${PORT}`)
