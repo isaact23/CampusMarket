@@ -86,7 +86,13 @@ export class Database {
 
     // Delete a product by ID.
     async deleteProduct(id) {
-        throw new Error("Not impl")
+        this.checkConnection()
+
+        let req = this.poolConnection.request()
+        req.input('id', sql.Int, id)
+        await req.query(
+            `DELETE FROM dbo.Products WHERE ID = @id`
+        )
     }
 
     // Add new user and return user ID. Throws error if
@@ -156,7 +162,13 @@ export class Database {
 
     // Delete a user by ID.
     async deleteUser(id) {
-        throw new Error("Not impl")
+        this.checkConnection()
+
+        let req = this.poolConnection.request()
+        req.input('id', sql.Int, id)
+        await req.query(
+            `DELETE FROM dbo.Users WHERE ID = @id`
+        )
     }
 
     // Create a new message and return the message ID.
@@ -209,7 +221,13 @@ export class Database {
 
     // Delete a message by ID.
     async deleteMessage(id) {
-        throw new Error("Not impl")
+        this.checkConnection()
+
+        let req = this.poolConnection.request()
+        req.input('id', sql.Int, id)
+        await req.query(
+            `DELETE FROM dbo.Messages WHERE ID = @id`
+        )
     }
 
     // Create a new transaction and return its ID.
