@@ -9,11 +9,11 @@ class Message:
         this.id = id
 
 class Transaction:
-    def __init__(this, product_id, buying_user_id, selling_user_id):
+    def __init__(this, product_id, buyer_id, seller_id):
         this.id = None
         this.product_id = product_id
-        this.buying_user_id = buying_user_id
-        this.selling_user_id = selling_user_id
+        this.buyer_id = buyer_id
+        this.seller_id = seller_id
     def set_id(this, id):
         this.id = id
 

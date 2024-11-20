@@ -20,4 +20,3 @@ def test_delete_user():
     delete_user(id)
 
     assert lookup_user(id) is None
-    
