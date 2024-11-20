@@ -12,7 +12,7 @@ def add_product(product: Product) -> int:
         cursor.execute("""
                         INSERT INTO dbo.Products (Name, Description, Price, OwnerID) 
                         OUTPUT INSERTED.ID 
-                        VALUES (? ? ? ?)
+                        VALUES (?, ?, ?, ?)
                         """, product.name, product.description, product.price, product.owner_id)
         new_id = cursor.fetchone()[0]
         print("Successfully added product")
@@ -77,7 +77,7 @@ def add_user(user: User) -> int:
             cursor.execute("""
                            INSERT INTO dbo.Users (Username, Email, Password) 
                            OUTPUT INSERTED.ID 
-                           VALUES (? ? ?)
+                           VALUES (?, ?, ?)
                            """, user.username, user.email, user.password)
             new_id = cursor.fetchone()[0]
             print("Successfully added user " + user.username)
@@ -97,14 +97,14 @@ def lookup_user(id: int) -> User:
                        FROM dbo.Users 
                        WHERE ID = ?
                        """, id)
-        user = cursor.fetchone()
-        if user is None:
+        res = cursor.fetchone()
+        if res is None:
             print("Did not find user", id)
             return None
         else:
             print("Found user", id)
-            user = User(user.Username)
-            user.set_id(user.ID)
+            user = User(res.Username, res.Email, res.Password)
+            user.set_id(res.ID)
             return user
 
 def delete_user(id: int) -> bool:
@@ -134,7 +134,7 @@ def add_message(message: Message) -> int:
                        INSERT INTO dbo.Messages 
                        (Title, Content, FromUserID, ToUserID) 
                        OUTPUT INSERTED.ID
-                       VALUES (? ? ? ?)
+                       VALUES (?, ?, ?, ?)
                        """, message.title, message.content, message.from_id, message.to_id)
         
         print("Message added")
@@ -188,7 +188,7 @@ def add_transaction(transaction: Transaction) -> int:
                        INSERT INTO dbo.Transactions
                        (ProductID, BuyerID, SellerID) 
                        OUTPUT INSERTED.ID
-                       VALUES (? ? ?)
+                       VALUES (?, ?, ?)
                        """, transaction.product_id, transaction.buyer_id, transaction.seller_id)
         
         print("Transaction added")
@@ -232,4 +232,4 @@ print("Authenticating into database")
 conn = get_conn()
 print("Authenticated into database")
 
-print(add_user(User("shuffles", "shuffles@gmail.com", "helloWorld")))
+#print(add_user(User("shuffles", "shuffles@gmail.com", "helloWorld")))
