@@ -1,9 +1,30 @@
 import pyodbc, struct
 from azure import identity
 from azure_keys import AZURE_SQL_CONNECTIONSTRING
-
+from table_setup import TABLE_SETUP_QUERY
 from market_types import *
 from typing import List
+
+def is_database_empty() -> bool:
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT * FROM dbo.Users")
+        if cursor.fetchone() is not None:
+            return False
+        cursor.execute("SELECT * FROM dbo.Products")
+        if cursor.fetchone() is not None:
+            return False
+        cursor.execute("SELECT * FROM dbo.Transactions")
+        if cursor.fetchone() is not None:
+            return False
+        cursor.execute("SELECT * FROM dbo.Messages")
+        if cursor.fetchone() is not None:
+            return False
+        return True
+
+def database_delete_everything():
+    with conn.cursor() as cursor:
+        cursor.execute(TABLE_SETUP_QUERY)
+        conn.commit()
 
 def add_product(product: Product) -> int:
     print("Adding product")
@@ -84,8 +105,7 @@ def add_user(user: User) -> int:
             conn.commit()
             return new_id
         else:
-            print("User " + user.username + " already exists. Returning their ID")
-            return res.ID
+            raise Exception("User " + user.username + " already exists.")
 
 
 def lookup_user(id: int) -> User:
