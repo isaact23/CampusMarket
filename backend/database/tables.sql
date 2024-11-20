@@ -7,6 +7,8 @@ DROP TABLE dbo.Users;
 CREATE TABLE Users (
     ID int IDENTITY(1, 1),
     Username varchar(64) UNIQUE,
+    Email varchar(320) UNIQUE,
+    Password varchar(128),
 
     PRIMARY KEY (ID)
 )
@@ -26,13 +28,13 @@ CREATE TABLE Products (
 CREATE TABLE Transactions (
     ID int IDENTITY(1, 1),
     ProductID int,
-    BuyingUserID int,
-    SellingUserID int,
+    BuyerID int,
+    SellerID int,
 
     PRIMARY KEY (ID),
     FOREIGN KEY (ProductID) REFERENCES Products(ID),
-    FOREIGN KEY (BuyingUserID) REFERENCES Users(ID),
-    FOREIGN KEY (SellingUserID) REFERENCES Users(ID)
+    FOREIGN KEY (BuyerID) REFERENCES Users(ID),
+    FOREIGN KEY (SellerID) REFERENCES Users(ID)
 )
 
 -- Central table in second star schema

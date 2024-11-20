@@ -16,6 +16,7 @@ def add_product(product: Product) -> int:
                         """, product.name, product.description, product.price, product.owner_id)
         new_id = cursor.fetchone()[0]
         print("Successfully added product")
+        conn.commit()
         return new_id
 
 def lookup_product(id: int) -> Product:
@@ -53,6 +54,7 @@ def delete_product(id: int) -> bool:
         else:
             cursor.execute("DELETE FROM dbo.Products WHERE ID = ?", id)
             print("Deleted product", id)
+            conn.commit()
             return True
 
 def get_homepage() -> List[Product]:
@@ -73,12 +75,13 @@ def add_user(user: User) -> int:
         res = cursor.fetchone()
         if res is None:
             cursor.execute("""
-                           INSERT INTO dbo.Users (Username) 
+                           INSERT INTO dbo.Users (Username, Email, Password) 
                            OUTPUT INSERTED.ID 
-                           VALUES (?)
-                           """, user.username)
+                           VALUES (? ? ?)
+                           """, user.username, user.email, user.password)
             new_id = cursor.fetchone()[0]
             print("Successfully added user " + user.username)
+            conn.commit()
             return new_id
         else:
             print("User " + user.username + " already exists. Returning their ID")
@@ -120,6 +123,7 @@ def delete_user(id: int) -> bool:
         else:
             cursor.execute("DELETE FROM dbo.Users WHERE ID = ?", id)
             print("Deleted user", id)
+            conn.commit()
             return True
 
 def add_message(message: Message) -> int:
@@ -135,6 +139,7 @@ def add_message(message: Message) -> int:
         
         print("Message added")
         new_id = cursor.fetchone()[0]
+        conn.commit()
         return new_id
 
 def lookup_message(id: int) -> Message:
@@ -172,6 +177,7 @@ def delete_message(id: int) -> bool:
         else:
             cursor.execute("DELETE FROM dbo.Messages WHERE ID = ?", id)
             print("Deleted message", id)
+            conn.commit()
             return True
 
 def add_transaction(transaction: Transaction) -> int:
@@ -180,13 +186,14 @@ def add_transaction(transaction: Transaction) -> int:
     with conn.cursor() as cursor:
         cursor.execute("""
                        INSERT INTO dbo.Transactions
-                       (ProductID, BuyingUserID, SellingUserID) 
+                       (ProductID, BuyerID, SellerID) 
                        OUTPUT INSERTED.ID
                        VALUES (? ? ?)
-                       """, transaction.product_id, transaction.buying_user_id, transaction.selling_user_id)
+                       """, transaction.product_id, transaction.buyer_id, transaction.seller_id)
         
         print("Transaction added")
         new_id = cursor.fetchone()[0]
+        conn.commit()
         return new_id
 
 def lookup_transaction(id: int) -> Transaction:
@@ -204,7 +211,7 @@ def lookup_transaction(id: int) -> Transaction:
             return None
         else:
             print("Found transaction", id)
-            transaction = Transaction(res.ProductID, res.BuyingUserID, res.SellingUserID)
+            transaction = Transaction(res.ProductID, res.BuyerID, res.SellerID)
             transaction.set_id(res.ID)
             return transaction
 
@@ -225,4 +232,4 @@ print("Authenticating into database")
 conn = get_conn()
 print("Authenticated into database")
 
-print(add_user(User("shuffles")))
+print(add_user(User("shuffles", "shuffles@gmail.com", "helloWorld")))
