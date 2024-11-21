@@ -29,13 +29,11 @@ CREATE TABLE Products (
 CREATE TABLE Transactions (
     ID int IDENTITY(1, 1),
     ProductID int,
-    BuyerID int,
-    SellerID int,
+    BuyerID int
 
     PRIMARY KEY (ID),
     FOREIGN KEY (ProductID) REFERENCES Products(ID),
-    FOREIGN KEY (BuyerID) REFERENCES Users(ID),
-    FOREIGN KEY (SellerID) REFERENCES Users(ID)
+    FOREIGN KEY (BuyerID) REFERENCES Users(ID)
 )
 
 -- Central table in second star schema

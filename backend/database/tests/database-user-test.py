@@ -3,13 +3,18 @@ from database import *
 from market_types import *
 
 def test_add_user():
-    user = User("shuffles", "shuffles@shuffles.shuffles", "shuffles")
+    user = User("shuffles", "shuffles@shuffles.shuffles", "shuffles2")
     id = add_user(user)
 
     assert not is_database_empty()
 
     assert id == 1
-    assert lookup_user(id) is not None
+    found_user = lookup_user(id)
+    assert found_user is not None
+    assert found_user.id == 1
+    assert found_user.username == "shuffles"
+    assert found_user.email == "shuffles@shuffles.shuffles"
+    assert found_user.password == "shuffles2"
 
     dup_user1 = User("shuffles", "alpha@beta.com", "pass")
     dup_user2 = User("freddy", "shuffles@shuffles.shuffles", "mypass")
@@ -30,4 +35,3 @@ def test_delete_user():
 def test_missing_user():
     assert lookup_user(5) is None
     assert lookup_user(50) is None
-

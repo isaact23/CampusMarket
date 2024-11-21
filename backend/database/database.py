@@ -25,6 +25,7 @@ def database_delete_everything():
     with conn.cursor() as cursor:
         cursor.execute(TABLE_SETUP_QUERY)
         conn.commit()
+        print("Reset database contents")
 
 def add_product(product: Product) -> int:
     print("Adding product")
@@ -181,6 +182,40 @@ def lookup_message(id: int) -> Message:
             message.set_id(res.ID)
             return message
 
+
+
+def get_messages_to(user_id: int) -> List[Message]:
+    with conn.cursor() as cursor:
+        cursor.execute("""
+                       SELECT ID, Title, Content, FromUserID, ToUserID
+                       FROM dbo.Messages
+                       WHERE ToUserID = ?
+                       """, user_id)
+        
+        res = cursor.fetchall()
+        messages = []
+        for row in res:
+            message = Message(row[4], row[3], row[1], row[2])
+            message.set_id(row[0])
+            messages.append(message)
+        return messages
+
+def get_messages_from(user_id: int) -> List[Message]:
+    with conn.cursor() as cursor:
+        cursor.execute("""
+                       SELECT ID, Title, Content, FromUserID, ToUserID
+                       FROM dbo.Messages
+                       WHERE FromUserID = ?
+                       """, user_id)
+        
+        res = cursor.fetchall()
+        messages = []
+        for row in res:
+            message = Message(row[4], row[3], row[1], row[2])
+            message.set_id(row[0])
+            messages.append(message)
+        return messages
+
 def delete_message(id: int) -> bool:
     print("Deleting message", id)
 
@@ -206,10 +241,10 @@ def add_transaction(transaction: Transaction) -> int:
     with conn.cursor() as cursor:
         cursor.execute("""
                        INSERT INTO dbo.Transactions
-                       (ProductID, BuyerID, SellerID) 
+                       (ProductID, BuyerID) 
                        OUTPUT INSERTED.ID
-                       VALUES (?, ?, ?)
-                       """, transaction.product_id, transaction.buyer_id, transaction.seller_id)
+                       VALUES (?, ?)
+                       """, transaction.product_id, transaction.buyer_id)
         
         print("Transaction added")
         new_id = cursor.fetchone()[0]
@@ -231,7 +266,7 @@ def lookup_transaction(id: int) -> Transaction:
             return None
         else:
             print("Found transaction", id)
-            transaction = Transaction(res.ProductID, res.BuyerID, res.SellerID)
+            transaction = Transaction(res.ProductID, res.BuyerID)
             transaction.set_id(res.ID)
             return transaction
 
@@ -251,5 +286,3 @@ def get_conn():
 print("Authenticating into database")
 conn = get_conn()
 print("Authenticated into database")
-
-#print(add_user(User("shuffles", "shuffles@gmail.com", "helloWorld")))
