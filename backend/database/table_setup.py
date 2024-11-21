@@ -16,9 +16,9 @@ CREATE TABLE Users (
 
 CREATE TABLE Products (
 	ID int IDENTITY(1, 1),
-	Name text,
-    Description text,
-	Price decimal,
+	Name varchar(100),
+    Description varchar(1000),
+	Price DECIMAL(10, 2),
 	OwnerID int,
 
     PRIMARY KEY (ID),
@@ -39,8 +39,8 @@ CREATE TABLE Transactions (
 -- Central table in second star schema
 CREATE TABLE Messages (
     ID int IDENTITY(1, 1),
-    Title text,
-    Content text,
+    Title varchar(100),
+    Content varchar(1000),
     FromUserID int,
     ToUserID int,
 

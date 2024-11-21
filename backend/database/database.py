@@ -84,8 +84,7 @@ def get_homepage() -> List[Product]:
         cursor.execute("""
                        SELECT ID, Name, Description, Price, OwnerID 
                        FROM dbo.Products
-                       WHERE ID = ?
-                       """, id)
+                       """)
         res = cursor.fetchall()
         products = []
         for row in res:
@@ -95,14 +94,15 @@ def get_homepage() -> List[Product]:
 
         return products
 
-def search_products(query: Query) -> List[Product]:
+def search_products(query: str) -> List[Product]:
     with conn.cursor() as cursor:
+        query = f"%{query.upper()}%"
         cursor.execute("""
                        SELECT ID, Name, Description, Price, OwnerID 
                        FROM dbo.Products
-                       WHERE UPPER(Name) LIKE UPPER('%?%') OR
-                       UPPER(Description) LIKE UPPER('%?%')
-                       """, id)
+                       WHERE UPPER(Name) LIKE ? OR
+                       UPPER(Description) LIKE ? ;
+                       """, query, query)
         res = cursor.fetchall()
         products = []
         for row in res:
@@ -313,3 +313,15 @@ def get_conn():
 print("Authenticating into database")
 conn = get_conn()
 print("Authenticated into database")
+
+# database_delete_everything()
+
+# id1 = add_user(User('a', 'a', 'a'))
+# id2 = add_user(User('b', 'b', 'b'))
+
+# add_product(Product('food WOW', 'healthy stuff', 10, id1))
+# add_product(Product('New Computer', "Has 512kb hard drive and a millibyte of ram", 159.99, id2))
+# add_product(Product('FREE clothes', 'Select any desired assortment wow', 15.99, id1))
+# add_product(Product('Shrek rental', 'Watch Shrek in awesome quality 720p resolution wow', 9.99, id2))
+
+# print(search_products("food"))

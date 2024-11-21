@@ -11,13 +11,13 @@ def test_add_product():
     
     assert prod_id == 1
 
-    found_prod = lookup_product()
+    found_prod = lookup_product(prod_id)
     assert found_prod is not None
     assert found_prod.id == prod_id
     assert found_prod.name == "chair"
     assert found_prod.description == "for sitting"
     assert found_prod.price == 4.50
-    assert found_prod.user_id == user_id
+    assert found_prod.owner_id == user_id
 
 
 def test_delete_product():
