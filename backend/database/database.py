@@ -80,10 +80,37 @@ def delete_product(id: int) -> bool:
             return True
 
 def get_homepage() -> List[Product]:
-    pass # Return array of products
+    with conn.cursor() as cursor:
+        cursor.execute("""
+                       SELECT ID, Name, Description, Price, OwnerID 
+                       FROM dbo.Products
+                       WHERE ID = ?
+                       """, id)
+        res = cursor.fetchall()
+        products = []
+        for row in res:
+            product = Product(row[1], row[2], row[3], row[4])
+            product.set_id(row[0])
+            products.append(product)
+
+        return products
 
 def search_products(query: Query) -> List[Product]:
-    pass # Return array of products
+    with conn.cursor() as cursor:
+        cursor.execute("""
+                       SELECT ID, Name, Description, Price, OwnerID 
+                       FROM dbo.Products
+                       WHERE UPPER(Name) LIKE UPPER('%?%') OR
+                       UPPER(Description) LIKE UPPER('%?%')
+                       """, id)
+        res = cursor.fetchall()
+        products = []
+        for row in res:
+            product = Product(row[1], row[2], row[3], row[4])
+            product.set_id(row[0])
+            products.append(product)
+
+        return products
 
 def add_user(user: User) -> int:
     print("Adding user " + user.username)

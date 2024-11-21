@@ -34,7 +34,4 @@ class User:
         this.password = password
     def set_id(this, id):
         this.id = id
-
-class Query:
-    def __init__(this, text):
-        this.text = text
+        

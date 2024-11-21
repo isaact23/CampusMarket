@@ -30,3 +30,19 @@ def test_delete_product():
 def test_missing_product():
     assert lookup_product(5) is None
     assert lookup_product(50) is None
+
+def test_search_products():
+    id1 = add_user(User('a', 'a', 'a'))
+    id2 = add_user(User('b', 'b', 'b'))
+
+    add_product(Product('food WOW', 'healthy stuff', 10, id1))
+    add_product(Product('New Computer', "Has 512kb hard drive and a millibyte of ram", 159.99, id2))
+    add_product(Product('FREE clothes', 'Select any desired assortment wow', 15.99, id1))
+    add_product(Product('Shrek rental', 'Watch Shrek in awesome quality 720p resolution wow', 9.99, id2))
+
+    assert len(get_homepage()) == 4
+    assert len(search_products("food")) == 1
+    assert len(search_products("FOOD")) == 1
+    assert len(search_products("One of us")) == 0
+    assert len(search_products("aweSOME")) == 1
+    assert len(search_products("wow")) == 3
