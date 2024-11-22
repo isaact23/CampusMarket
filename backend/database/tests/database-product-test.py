@@ -24,8 +24,11 @@ def test_delete_product():
     user_id = add_user(User("user1", "a@a.com", "pass"))
     prod = Product("chair", "for sitting", 4.50, user_id)
     prod_id = add_product(prod)
-    delete_product(prod_id)
+    assert delete_product(prod_id)
     assert lookup_product(prod_id) is None
+    
+    assert not delete_product(prod_id)
+    assert not delete_product(17)
 
 def test_missing_product():
     assert lookup_product(5) is None

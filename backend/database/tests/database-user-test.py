@@ -28,9 +28,13 @@ def test_add_user():
 def test_delete_user():
     user = User("user2", "a@a.com", "mypass")
     id = add_user(user)
-    delete_user(id)
-
+    assert delete_user(id)
     assert lookup_user(id) is None
+
+    assert not delete_user(id)
+    assert not delete_user(20)
+
+    
 
 def test_missing_user():
     assert lookup_user(5) is None

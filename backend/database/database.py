@@ -8,18 +8,7 @@ from typing import List
 def is_database_empty() -> bool:
     with conn.cursor() as cursor:
         cursor.execute("SELECT * FROM dbo.Users")
-        if cursor.fetchone() is not None:
-            return False
-        cursor.execute("SELECT * FROM dbo.Products")
-        if cursor.fetchone() is not None:
-            return False
-        cursor.execute("SELECT * FROM dbo.Transactions")
-        if cursor.fetchone() is not None:
-            return False
-        cursor.execute("SELECT * FROM dbo.Messages")
-        if cursor.fetchone() is not None:
-            return False
-        return True
+        return cursor.fetchone() is None
 
 def database_delete_everything():
     with conn.cursor() as cursor:
@@ -313,15 +302,3 @@ def get_conn():
 print("Authenticating into database")
 conn = get_conn()
 print("Authenticated into database")
-
-# database_delete_everything()
-
-# id1 = add_user(User('a', 'a', 'a'))
-# id2 = add_user(User('b', 'b', 'b'))
-
-# add_product(Product('food WOW', 'healthy stuff', 10, id1))
-# add_product(Product('New Computer', "Has 512kb hard drive and a millibyte of ram", 159.99, id2))
-# add_product(Product('FREE clothes', 'Select any desired assortment wow', 15.99, id1))
-# add_product(Product('Shrek rental', 'Watch Shrek in awesome quality 720p resolution wow', 9.99, id2))
-
-# print(search_products("food"))
