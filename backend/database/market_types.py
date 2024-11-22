@@ -9,11 +9,10 @@ class Message:
         this.id = id
 
 class Transaction:
-    def __init__(this, product_id, buying_user_id, selling_user_id):
+    def __init__(this, product_id, buyer_id):
         this.id = None
         this.product_id = product_id
-        this.buying_user_id = buying_user_id
-        this.selling_user_id = selling_user_id
+        this.buyer_id = buyer_id
     def set_id(this, id):
         this.id = id
 
@@ -28,12 +27,11 @@ class Product:
         this.id = id
 
 class User:
-    def __init__(this, username):
+    def __init__(this, username, email, password):
         this.id = None
         this.username = username
+        this.email = email
+        this.password = password
     def set_id(this, id):
         this.id = id
-
-class Query:
-    def __init__(this, text):
-        this.text = text
+        

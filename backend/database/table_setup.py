@@ -1,3 +1,4 @@
+TABLE_SETUP_QUERY="""
 
 DROP TABLE dbo.Messages;
 DROP TABLE dbo.Transactions;
@@ -47,3 +48,5 @@ CREATE TABLE Messages (
     FOREIGN KEY (FromUserID) REFERENCES Users(ID),
     FOREIGN KEY (ToUserID) REFERENCES Users(ID),
 )
+
+"""
