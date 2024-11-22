@@ -1,9 +1,10 @@
 import pyodbc, struct
 from azure import identity
-from azure_keys import AZURE_SQL_CONNECTIONSTRING
-from table_setup import TABLE_SETUP_QUERY
-from market_types import *
 from typing import List
+
+from .azure_keys import AZURE_SQL_CONNECTIONSTRING
+from .table_setup import TABLE_SETUP_QUERY
+from .market_types import *
 
 def is_database_empty() -> bool:
     with conn.cursor() as cursor:
@@ -101,28 +102,34 @@ def search_products(query: str) -> List[Product]:
 
         return products
 
-def add_user(user: User) -> int:
-    print("Adding user " + user.username)
-
+def can_register(user: User) -> bool:
     with conn.cursor() as cursor:
         cursor.execute("""
                        SELECT * 
                        FROM dbo.Users 
                        WHERE Username = ?
+                       OR 
                        """, user.username)
         res = cursor.fetchone()
-        if res is None:
-            cursor.execute("""
-                           INSERT INTO dbo.Users (Username, Email, Password) 
-                           OUTPUT INSERTED.ID 
-                           VALUES (?, ?, ?)
-                           """, user.username, user.email, user.password)
-            new_id = cursor.fetchone()[0]
-            print("Successfully added user " + user.username)
-            conn.commit()
-            return new_id
-        else:
-            raise Exception("User " + user.username + " already exists.")
+
+        return res is not None
+
+def add_user(user: User) -> int:
+    print("Adding user " + user.username)
+
+    if not can_register(user):
+        raise Exception("Failed to register user with username " + user.username)
+
+    with conn.cursor() as cursor:
+        cursor.execute("""
+                        INSERT INTO dbo.Users (Username, Email, Password) 
+                        OUTPUT INSERTED.ID 
+                        VALUES (?, ?, ?)
+                        """, user.username, user.email, user.password)
+        new_id = cursor.fetchone()[0]
+        print("Successfully added user " + user.username)
+        conn.commit()
+        return new_id
 
 
 def lookup_user(id: int) -> User:
