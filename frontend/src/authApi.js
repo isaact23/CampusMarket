@@ -23,6 +23,7 @@ export const register = async (username, email, password) => {
             password: password
         })
         console.log("Registered successfully")
+        window.location = '/home'
         return response
     } catch (error) {
         if (error.status == 400) {
