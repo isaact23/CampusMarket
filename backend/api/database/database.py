@@ -108,11 +108,11 @@ def can_register(user: User) -> bool:
                        SELECT * 
                        FROM dbo.Users 
                        WHERE Username = ?
-                       OR 
-                       """, user.username)
+                       OR Email = ?
+                       """, user.username, user.email)
         res = cursor.fetchone()
 
-        return res is not None
+        return res is None
 
 def add_user(user: User) -> int:
     print("Adding user " + user.username)
