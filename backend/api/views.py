@@ -2,6 +2,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from datetime import datetime
+from django.http import HttpResponse
+import bcrypt, json
+from .database.database import *
+from .database.market_types import User
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -41,3 +45,24 @@ def login(request):
             'email': serializer.validated_data['email']
         })
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def register(request):
+    data = json.loads(request.body)
+
+    # Get fields from register request
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+
+    # Hash password before storing in database
+    bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hash = bcrypt.hashpw(bytes, salt)
+
+    new_user = User(username, email, hash)
+    if can_register(new_user):
+        add_user(new_user)
+        return HttpResponse(f"User successfully registered", status=201)
+    else:
+        return HttpResponse(f"Failed to register user", status=400)
