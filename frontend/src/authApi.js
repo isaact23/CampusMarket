@@ -1,5 +1,18 @@
 import axios from 'axios';
 
+export const get_homepage = async () => {
+    console.log("Getting homepage products")
+
+    try {
+        const response = await axios.post("/api/homepage/", {})
+        console.log("Got homepage data")
+        return response
+    } catch (error) {
+        console.error("Retrieving homepage data failed:", error)
+        return null
+    }
+}
+
 export const register = async (username, email, password) => {
     console.log("Sending registration request")
 
@@ -12,7 +25,11 @@ export const register = async (username, email, password) => {
         console.log("Registered successfully")
         return response
     } catch (error) {
-        console.error("Account creation failed:", error)
+        if (error.status == 400) {
+            console.log("Reigstration rejected")
+        } else {
+            console.error("Account creation failed:", error)
+        }
         return null
     }
 }
@@ -28,7 +45,11 @@ export const login = async (email, password) => {
         console.log("Logged in successfully")
         return response
     } catch (error) {
-        console.error("Login failed:", error)
+        if (error.status == 400) {
+            console.log("Login rejected")
+        } else {
+            console.error("Login failed:", error)
+        }
         return null
     }
 };

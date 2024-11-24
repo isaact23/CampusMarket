@@ -1,4 +1,4 @@
-import pyodbc, struct
+import pyodbc, struct, bcrypt
 from azure import identity
 from typing import List
 
@@ -131,6 +131,28 @@ def add_user(user: User) -> int:
         conn.commit()
         return new_id
 
+def lookup_user_login(email, password) -> User:
+    print("Looking up user", email)
+
+    with conn.cursor() as cursor:
+        cursor.execute("""
+                       SELECT * 
+                       FROM dbo.Users 
+                       WHERE Email = ?
+                       """, email)
+        res = cursor.fetchone()
+        if res is None:
+            print("Did not find user with email", email)
+            return None
+        
+        if not bcrypt.checkpw(password.encode('utf-8'), res.Password.encode('utf-8')):
+            print("Found user but credentials were invalid")
+            return None
+        
+        print("Found user", email)
+        user = User(res.Username, res.Email, None)
+        user.set_id(res.ID)
+        return user
 
 def lookup_user(id: int) -> User:
     print("Looking up user", id)
