@@ -50,5 +50,3 @@ def register(request):
         return HttpResponse(f"User successfully registered", status=201)
     else:
         return HttpResponse(f"Failed to register user", status=400)
-
-    # Return a response
