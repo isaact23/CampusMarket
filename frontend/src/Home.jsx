@@ -3,7 +3,7 @@ import {get_homepage} from "./authApi"
 import { useState, useEffect } from "react"
 
 function Home() {
-    const [products, setProducts] = useState([])
+    /*const [products, setProducts] = useState([])
     useEffect(() => {
         const fetchProducts = async () => {
             const data = await get_homepage()
@@ -12,7 +12,7 @@ function Home() {
         }
 
         fetchProducts()
-    }, [])
+    }, [])*/
 
     var cards = []
     cards.push(
@@ -28,15 +28,17 @@ function Home() {
                 <a href="/home" className="w3-bar-item w3-button w3-right"><h2>Home</h2></a>
             </div>
             <div className="home-content">
-                {products.map((product) => (
-                    <div className="home-card w3-panel w3-margin w3-card-4 w3-black">
-                        <h1>{product.name}</h1>
-                        <p>{product.description}</p>
-                    </div>
-                ))}
+                {cards}
             </div>
         </div>
     )
 }
 
 export default Home
+
+                /*{products.map((product) => (
+                    <div className="home-card w3-panel w3-margin w3-card-4 w3-black">
+                        <h1>{product.name}</h1>
+                        <p>{product.description}</p>
+                    </div>
+                ))}*/

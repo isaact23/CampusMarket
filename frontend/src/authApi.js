@@ -43,6 +43,7 @@ export const login = async (email, password) => {
             password: password
         })
         console.log("Logged in successfully")
+        window.location = '/home'
         return response
     } catch (error) {
         if (error.status == 400) {

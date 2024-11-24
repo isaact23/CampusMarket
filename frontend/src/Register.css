@@ -7,6 +7,10 @@ body {
   background: linear-gradient(135deg, #dbe7de, #206730); /* Gradient background */
 }
 
+p {
+  color: black;
+}
+
 .register-container {
   display: flex;
   justify-content: center;
