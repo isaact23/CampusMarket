@@ -5,5 +5,5 @@ if [[ "$confirm" != "y" ]]; then
   exit 1
 fi
 
-../env/bin/python3 -m coverage run -m pytest ./tests/*
-../env/bin/python3 -m coverage html
+../../env/bin/python3 -m coverage run -m pytest ./tests/*
+../../env/bin/python3 -m coverage html

@@ -1,13 +1,11 @@
 import pytest
-from database import *
+from database import Database
 
-# Reset the database before each test
-@pytest.fixture(scope='function', autouse=True)
-def run_tests():
-    database_delete_everything()
-    assert is_database_empty()
-
-# Reset the database at the end of the testing session
-@pytest.fixture(scope='session', autouse=True)
-def teardown():
-    database_delete_everything()
+@pytest.fixture(scope='function')
+def database():
+    database = Database()
+    database.reset()
+    yield database
+    database.reset()
+    database.dispose()
+    

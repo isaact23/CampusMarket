@@ -4,13 +4,15 @@ from rest_framework.response import Response
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
 import bcrypt, json
-from .database.database import *
-from .database.market_types import User
+from .database.database import Database
+from .database.database_types import TypeBase, User, Product, Transaction, Message
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import LoginSerializer
+
+database = Database()
 
 @api_view(['GET', 'POST'])
 def test_connection(request):
@@ -37,7 +39,7 @@ def test_connection(request):
 
 @api_view(['POST'])
 def homepage(request):
-    products = get_homepage()
+    products = database.get_homepage()
     data = {
         'products': products
     }
@@ -54,7 +56,7 @@ def login(request):
     email = data.get('email')
     password = data.get('password')
 
-    user = lookup_user_login(email, password)
+    user = database.can_login(email, password)
     if user is None:
         return Response("Login rejected by database", status=400)
 
@@ -80,8 +82,7 @@ def register(request):
     hash = bcrypt.hashpw(bytes, salt)
 
     new_user = User(username, email, hash)
-    if can_register(new_user):
-        add_user(new_user)
+    if database.add_user(new_user) is not None:
         return HttpResponse(f"User successfully registered", status=201)
     else:
         return HttpResponse(f"Failed to register user - user already exists", status=400)
