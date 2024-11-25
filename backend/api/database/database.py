@@ -2,13 +2,14 @@ import pyodbc, struct, bcrypt, urllib
 from azure import identity
 from typing import List
 
-from sqlalchemy import create_engine, text, event
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import create_engine, text, event, func, String
+from sqlalchemy.orm import sessionmaker, declarative_base, mapped_column, Mapped, Session
 
 from azure_keys import AZURE_DRIVER, AZURE_SERVER, AZURE_DATABASE
 from table_setup import TABLE_SETUP_QUERY
 from market_types import *
 
+Base = declarative_base()
 
 # def database_delete_everything():
 #     with conn.cursor() as cursor:
@@ -314,24 +315,32 @@ from market_types import *
 #             transaction.set_id(res.ID)
 #             return transaction
 
+class User(Base):
+    __tablename__ = "Users"
+    id: Mapped[int] = mapped_column(primary_key=True, name="ID")
+    username: Mapped[str] = mapped_column(String(64), name="Username")
+    email: Mapped[str] = mapped_column(String(320), name="Email")
+    password: Mapped[str] = mapped_column(String(128), name="Password")
 
-credential = identity.DefaultAzureCredential()
+    def __repr__(self):
+        return f"User(ID={self.id!r} Username={self.username!r} Email={self.email!r}"
 
 class Database:
     def __init__(self):
+        self.credential = identity.DefaultAzureCredential()
         self.engine = self._get_engine()
-        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        self.localSession = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
+        # Register token provider for SQLAlchemy engine
         @event.listens_for(self.engine, "do_connect")
         def provide_token(_, _2, _3, cparams):
             self._provide_token(cparams)
     
+    # Return true if all tables in database are empty.
     def is_empty(self):
-        session = scoped_session(self.SessionLocal)
-        res = session.execute(text("SELECT COUNT(*) FROM Users")).scalar()
-        session.remove()
-
-        return res == 0
+        with Session(self.engine) as session:
+            query = session.query(func.count('*')).select_from(User)
+            return query.scalar() == 0
 
     def dispose(self):
         self.engine.dispose()
@@ -345,7 +354,7 @@ class Database:
         return create_engine(url)
     
     def _provide_token(self, cparams):
-        token_bytes = credential.get_token("https://database.windows.net/.default").token.encode("UTF-16-LE")
+        token_bytes = self.credential.get_token("https://database.windows.net/.default").token.encode("UTF-16-LE")
         token_struct = struct.pack(f'<I{len(token_bytes)}s', len(token_bytes), token_bytes)
         SQL_COPT_SS_ACCESS_TOKEN = 1256  # This connection option is defined by microsoft in msodbcsql.h
 
