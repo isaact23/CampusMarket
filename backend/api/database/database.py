@@ -2,7 +2,8 @@ import pyodbc, struct, bcrypt, urllib
 from azure import identity
 from typing import List
 
-from sqlalchemy import create_engine, event, func, String, or_, exists, literal, select
+from sqlalchemy import create_engine, event, func, String, Float, Numeric, \
+    or_, exists, literal, select, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, mapped_column, Mapped, Session
 
 from azure_keys import AZURE_DRIVER, AZURE_SERVER, AZURE_DATABASE
@@ -10,12 +11,6 @@ from table_setup import TABLE_SETUP_QUERY
 from market_types import *
 
 Base = declarative_base()
-
-# def database_delete_everything():
-#     with conn.cursor() as cursor:
-#         cursor.execute(TABLE_SETUP_QUERY)
-#         conn.commit()
-#         print("Reset database contents")
 
 # def add_product(product: Product) -> int:
 #     print("Adding product")
@@ -325,6 +320,28 @@ class User(Base):
     def __repr__(self):
         return f"User(ID={self.id!r} Username={self.username!r} Email={self.email!r} Password={self.password!r})"
 
+class Product(Base):
+    __tablename__ = "Products"
+    id: Mapped[int] = mapped_column(primary_key=True, name="ID")
+    name: Mapped[str] = mapped_column(String(100), name="Name")
+    description: Mapped[str] = mapped_column(String(1000), name="Description")
+    price: Mapped[float] = mapped_column(Numeric(10, 2), name="Price")
+    owner_id: Mapped[int] = mapped_column(ForeignKey("Users.ID"), name="OwnerID")
+
+class Transactions(Base):
+    __tablename__ = "Transactions"
+    id: Mapped[int] = mapped_column(primary_key=True, name="ID")
+    product_id: Mapped[int] = mapped_column(ForeignKey("Products.ID"), name="ProductID")
+    buyer_id: Mapped[int] = mapped_column(ForeignKey("Users.ID"), name="BuyerID")
+
+class Messages(Base):
+    __tablename__ = "Messages"
+    id: Mapped[int] = mapped_column(primary_key=True, name="ID")
+    title: Mapped[str] = mapped_column(String(100), name="Title")
+    content: Mapped[str] = mapped_column(String(1000), name="Content")
+    from_user_id: Mapped[int] = mapped_column(ForeignKey("Users.ID"), name="FromUserID")
+    to_user_id: Mapped[int] = mapped_column(ForeignKey("Users.ID"), name="ToUserID")
+
 class Database:
     def __init__(self):
         self.credential = identity.DefaultAzureCredential()
@@ -431,10 +448,10 @@ class Database:
             query = session.query(func.count('*')).select_from(User)
             return query.scalar() == 0
     
-    # Empty all tables in the database.
-    def delete_all(self):
-        pass
-
+    # Reset all tables in the database.
+    def reset(self):
+        Base.metadata.drop_all(self.engine)
+        Base.metadata.create_all(self.engine)
 
     def dispose(self):
         self.engine.dispose()
@@ -459,6 +476,7 @@ user.username = "mySQL2"
 user.email = "sponge2@gmu.edu"
 user.password = "fl90J3K36n3D0"
 database = Database()
+database.reset()
 print(user)
 print(user.username)
 print(user.email)
