@@ -1,3 +1,5 @@
+# TODO: Re-write queries to be more efficient
+
 import pyodbc, struct, bcrypt, urllib
 from azure import identity
 from typing import List
@@ -353,7 +355,9 @@ class Database:
     
     # Get a list of products to display on the homepage.
     def get_homepage(self) -> List[Product]:
-        pass
+        with Session(self.engine) as session:
+            stmt = select(Product)
+            return session.scalars(stmt).all()
 
     # Search products by comparing a query string to the name and descriptions
     # of products.
@@ -363,7 +367,10 @@ class Database:
     # If the email and password correspond to a valid user, return the User
     # (indicating login allowed), otherwise return None (login rejected).
     def can_login(self, email, password) -> User:
-        pass
+        with Session(self.engine) as session:
+            stmt = select(User).where(User.email == email)
+            user = session.scalars(stmt).first()
+            return user
 
     # If the email or username is already taken, return False.
     # Otherwise, return True, indicating that the user is allowed to register.
@@ -389,55 +396,108 @@ class Database:
 
     # Lookup a user by ID. Return the User if found or None if not found.
     def lookup_user(self, id: int) -> User:
-        pass
+        with Session(self.engine) as session:
+            stmt = select(User).where(User.id == id)
+            for user in session.scalars(stmt):
+                return user
+            return None
 
     # Delete a user by ID. Return True if successfully deleted.
     def delete_user(self, id: int) -> bool:
-        pass
+        with Session(self.engine) as session:
+            user = self.lookup_user(id)
+            if user is None:
+                return False
+            
+            session.delete(user)
+            session.commit()
+            return True
     
     # Add a product to the database and return its ID.
     def add_product(self, product: Product) -> int:
-        pass
+        with Session(self.engine) as session:
+            session.add(product)
+            session.commit()
+            return product.id
 
     # Find a product by ID. Returns the Product if found or None if not found.
     def lookup_product(self, id: int) -> Product:
-        pass
+        with Session(self.engine) as session:
+            stmt = select(Product).where(Product.id == id)
+            for product in session.scalars(stmt):
+                return product
+            return None
 
     # Delete a product by ID. Returns True if successfully deleted.
     def delete_product(self, id: int) -> bool:
-        pass
+        with Session(self.engine) as session:
+            product = self.lookup_product(id)
+            if product is None:
+                return False
+            
+            session.delete(product)
+            session.commit()
+            return True
 
     # Get all messages sent to a user specified by ID.
     def get_messages_to(self, user_id: int) -> List[Message]:
-        pass
+        with Session(self.engine) as session:
+            stmt = select(Message).where(Message.to_user_id == user_id)
+            return session.scalars(stmt).all()
 
     # Get all messages sent from a user specified by ID.
     def get_messages_from(self, user_id: int) -> List[Message]:
-        pass
+        with Session(self.engine) as session:
+            stmt = select(Message).where(Message.from_user_id == user_id)
+            return session.scalars(stmt).all()
 
     # Add a message to the database and return its ID.
     def add_message(self, message: Message) -> int:
-        pass
+        with Session(self.engine) as session:
+            session.add(message)
+            session.commit()
+            return message.id
 
     # Lookup a message by ID. Returns the Message if found or None if not found.
     def lookup_message(self, id: int) -> Message:
-        pass
+        with Session(self.engine) as session:
+            stmt = select(Message).where(Message.id == id)
+            for message in session.scalars(stmt):
+                return message
+            return None
+
 
     # Delete a message by ID. Returns True if successfully deletee.
     def delete_message(self, id: int) -> bool:
-        pass
+        with Session(self.engine) as session:
+            message = self.lookup_product(id)
+            if message is None:
+                return False
+            
+            session.delete(message)
+            session.commit()
+            return True
 
     # Get all transactions for a buyer user ID.
     def get_transactions_from_buyer(self, user_id: int) -> List[Transaction]:
-        pass
+        with Session(self.engine) as session:
+            stmt = select(Transaction).where(Transaction.buyer_id == user_id)
+            return session.scalars(stmt).all()
 
     # Add a transaction to the database and return its ID.
     def add_transaction(self, transaction: Transaction) -> int:
-        pass
+        with Session(self.engine) as session:
+            session.add(transaction)
+            session.commit()
+            return transaction.id
 
     # Lookup a transaction by ID. Return the Transaction if found or None if not found.
     def lookup_transaction(self, id: int) -> Transaction:
-        pass
+        with Session(self.engine) as session:
+            stmt = select(Transaction).where(Transaction.id == id)
+            for transaction in session.scalars(stmt):
+                return transaction
+            return None
     
     # Return true if all tables in database are empty.
     def is_empty(self):
@@ -468,17 +528,9 @@ class Database:
 
         cparams["attrs_before"] = {SQL_COPT_SS_ACCESS_TOKEN: token_struct}
 
-# user = User()
-# user.username = "mySQL2"
-# user.email = "sponge2@gmu.edu"
-# user.password = "fl90J3K36n3D0"
-# database = Database()
-# database.reset()
-# print(user)
-# print(user.username)
-# print(user.email)
-# print(database.can_register(user))
-# print(database.add_user(user))
-# print(database.can_register(user))
-# print(user)
-# print(user.id)
+database = Database()
+user = User()
+user.username = "Hello"
+user.email = "my@gmu.edu"
+user.password = "kflvpb95jm2d"
+print(database.can_login("my@gmu.edu", "mypass"))
