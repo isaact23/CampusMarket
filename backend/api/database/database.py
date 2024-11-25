@@ -7,8 +7,6 @@ from sqlalchemy import create_engine, event, func, String, Float, Numeric, \
 from sqlalchemy.orm import sessionmaker, declarative_base, mapped_column, Mapped, Session
 
 from azure_keys import AZURE_DRIVER, AZURE_SERVER, AZURE_DATABASE
-from table_setup import TABLE_SETUP_QUERY
-from market_types import *
 
 Base = declarative_base()
 
@@ -328,13 +326,13 @@ class Product(Base):
     price: Mapped[float] = mapped_column(Numeric(10, 2), name="Price")
     owner_id: Mapped[int] = mapped_column(ForeignKey("Users.ID"), name="OwnerID")
 
-class Transactions(Base):
+class Transaction(Base):
     __tablename__ = "Transactions"
     id: Mapped[int] = mapped_column(primary_key=True, name="ID")
     product_id: Mapped[int] = mapped_column(ForeignKey("Products.ID"), name="ProductID")
     buyer_id: Mapped[int] = mapped_column(ForeignKey("Users.ID"), name="BuyerID")
 
-class Messages(Base):
+class Message(Base):
     __tablename__ = "Messages"
     id: Mapped[int] = mapped_column(primary_key=True, name="ID")
     title: Mapped[str] = mapped_column(String(100), name="Title")
@@ -371,14 +369,13 @@ class Database:
     # Otherwise, return True, indicating that the user is allowed to register.
     def can_register(self, user: User) -> bool:
         with Session(self.engine) as session:
-            query = select(exists().where(
+            query = session.query(func.count('*')).select_from(User).where(
                 or_(
-                    User.username == user.username,
+                    User.username == user.username, 
                     User.email == user.email
                 )
-            ))
-            res = session.scalar(query)
-            return res == 0
+            )
+            return query.scalar() == 0
 
     # Add a new user. Throws an exception if the user cannot be registered.
     def add_user(self, user: User) -> int:
@@ -471,13 +468,17 @@ class Database:
 
         cparams["attrs_before"] = {SQL_COPT_SS_ACCESS_TOKEN: token_struct}
 
-user = User()
-user.username = "mySQL2"
-user.email = "sponge2@gmu.edu"
-user.password = "fl90J3K36n3D0"
-database = Database()
-database.reset()
-print(user)
-print(user.username)
-print(user.email)
-print(database.can_register(user))
+# user = User()
+# user.username = "mySQL2"
+# user.email = "sponge2@gmu.edu"
+# user.password = "fl90J3K36n3D0"
+# database = Database()
+# database.reset()
+# print(user)
+# print(user.username)
+# print(user.email)
+# print(database.can_register(user))
+# print(database.add_user(user))
+# print(database.can_register(user))
+# print(user)
+# print(user.id)
