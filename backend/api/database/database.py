@@ -7,8 +7,8 @@ from typing import List
 from sqlalchemy import create_engine, event, func, or_, select
 from sqlalchemy.orm import sessionmaker, Session
 
-from azure_keys import AZURE_DRIVER, AZURE_SERVER, AZURE_DATABASE
-from database_types import TypeBase, User, Product, Transaction, Message
+from .azure_keys import AZURE_DRIVER, AZURE_SERVER, AZURE_DATABASE
+from .database_types import TypeBase, User, Product, Transaction, Message
 
 class Database:
     def __init__(self):
@@ -49,7 +49,7 @@ class Database:
             if user is None:
                 return None
             hashword = user.password
-            if bcrypt.checkpw(password, hashword):
+            if bcrypt.checkpw(password.encode('utf-8'), hashword.encode('utf-8')):
                 return user
             else:
                 return None
