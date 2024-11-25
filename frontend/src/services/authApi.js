@@ -35,7 +35,7 @@ export const register = async (username, email, password) => {
     }
 }
 
-export const login = async (email, password) => {
+export const login = async (email, password, onFail) => {
     console.log("Sending login request")
 
     try {
@@ -49,8 +49,10 @@ export const login = async (email, password) => {
     } catch (error) {
         if (error.status == 400) {
             console.log("Login rejected")
+            onFail("Incorrect email or password.")
         } else {
             console.error("Login failed:", error)
+            onFail("Login failed. Please try again later.")
         }
         return null
     }

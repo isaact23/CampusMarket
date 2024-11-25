@@ -2,9 +2,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './Login.jsx';
-import Register from './Register.jsx';
-import Home from './Home.jsx'
+import Login from './components/Login/Login.jsx';
+import Register from './components/Register/Register.jsx';
+import Home from './components/Home/Home.jsx'
 import ConnectionTest from './components/ConnectionTest';
 import NotFound from './components/NotFound';
 import './index.css';

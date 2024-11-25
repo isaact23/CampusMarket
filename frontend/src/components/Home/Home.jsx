@@ -1,5 +1,5 @@
 import './Home.css'
-import {get_homepage} from "./authApi"
+import {get_homepage} from "../../services/authApi"
 import { useState, useEffect } from "react"
 
 function Home() {
