@@ -362,7 +362,29 @@ class Database:
     # Search products by comparing a query string to the name and descriptions
     # of products.
     def search_products(self, query: str) -> List[Product]:
-        pass
+        with Session(self.engine) as session:
+            queryStr = f'%{query}%'
+            stmt = select(Product).filter(
+                or_(
+                    Product.name.ilike(queryStr),
+                    Product.description.ilike(queryStr)
+                )
+            )
+            return session.scalars(stmt).all()
+
+#         query = f"%{query.upper()}%"
+#         cursor.execute("""
+#                        SELECT ID, Name, Description, Price, OwnerID 
+#                        FROM dbo.Products
+#                        WHERE UPPER(Name) LIKE ? OR
+#                        UPPER(Description) LIKE ? ;
+#                        """, query, query)
+#         res = cursor.fetchall()
+#         products = []
+#         for row in res:
+#             product = Product(row[1], row[2], row[3], row[4])
+#             product.set_id(row[0])
+#             products.append(product)
 
     # If the email and password correspond to a valid user, return the User
     # (indicating login allowed), otherwise return None (login rejected).
