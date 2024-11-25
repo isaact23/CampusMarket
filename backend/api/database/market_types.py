@@ -26,12 +26,12 @@ class Product:
     def set_id(this, id):
         this.id = id
 
-class User:
-    def __init__(this, username, email, password):
-        this.id = None
-        this.username = username
-        this.email = email
-        this.password = password
-    def set_id(this, id):
-        this.id = id
+# class User:
+#     def __init__(this, username, email, password):
+#         this.id = None
+#         this.username = username
+#         this.email = email
+#         this.password = password
+#     def set_id(this, id):
+#         this.id = id
         

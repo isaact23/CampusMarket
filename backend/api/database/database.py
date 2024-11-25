@@ -2,7 +2,7 @@ import pyodbc, struct, bcrypt, urllib
 from azure import identity
 from typing import List
 
-from sqlalchemy import create_engine, text, event, func, String
+from sqlalchemy import create_engine, event, func, String, or_, exists, literal, select
 from sqlalchemy.orm import sessionmaker, declarative_base, mapped_column, Mapped, Session
 
 from azure_keys import AZURE_DRIVER, AZURE_SERVER, AZURE_DATABASE
@@ -323,7 +323,7 @@ class User(Base):
     password: Mapped[str] = mapped_column(String(128), name="Password")
 
     def __repr__(self):
-        return f"User(ID={self.id!r} Username={self.username!r} Email={self.email!r}"
+        return f"User(ID={self.id!r} Username={self.username!r} Email={self.email!r} Password={self.password!r})"
 
 class Database:
     def __init__(self):
@@ -336,11 +336,105 @@ class Database:
         def provide_token(_, _2, _3, cparams):
             self._provide_token(cparams)
     
+    # Get a list of products to display on the homepage.
+    def get_homepage(self) -> List[Product]:
+        pass
+
+    # Search products by comparing a query string to the name and descriptions
+    # of products.
+    def search_products(self, query: str) -> List[Product]:
+        pass
+
+    # If the email and password correspond to a valid user, return the User
+    # (indicating login allowed), otherwise return None (login rejected).
+    def can_login(self, email, password) -> User:
+        pass
+
+    # If the email or username is already taken, return False.
+    # Otherwise, return True, indicating that the user is allowed to register.
+    def can_register(self, user: User) -> bool:
+        with Session(self.engine) as session:
+            query = select(exists().where(
+                or_(
+                    User.username == user.username,
+                    User.email == user.email
+                )
+            ))
+            res = session.scalar(query)
+            return res == 0
+
+    # Add a new user. Throws an exception if the user cannot be registered.
+    def add_user(self, user: User) -> int:
+        if not self.can_register(user):
+            raise Exception("Failed to add user (conflicting username or email)")
+
+        with Session(self.engine) as session:
+            session.add(user)
+            session.commit()
+            return user.id
+
+    # Lookup a user by ID. Return the User if found or None if not found.
+    def lookup_user(self, id: int) -> User:
+        pass
+
+    # Delete a user by ID. Return True if successfully deleted.
+    def delete_user(self, id: int) -> bool:
+        pass
+    
+    # Add a product to the database and return its ID.
+    def add_product(self, product: Product) -> int:
+        pass
+
+    # Find a product by ID. Returns the Product if found or None if not found.
+    def lookup_product(self, id: int) -> Product:
+        pass
+
+    # Delete a product by ID. Returns True if successfully deleted.
+    def delete_product(self, id: int) -> bool:
+        pass
+
+    # Get all messages sent to a user specified by ID.
+    def get_messages_to(self, user_id: int) -> List[Message]:
+        pass
+
+    # Get all messages sent from a user specified by ID.
+    def get_messages_from(self, user_id: int) -> List[Message]:
+        pass
+
+    # Add a message to the database and return its ID.
+    def add_message(self, message: Message) -> int:
+        pass
+
+    # Lookup a message by ID. Returns the Message if found or None if not found.
+    def lookup_message(self, id: int) -> Message:
+        pass
+
+    # Delete a message by ID. Returns True if successfully deletee.
+    def delete_message(self, id: int) -> bool:
+        pass
+
+    # Get all transactions for a buyer user ID.
+    def get_transactions_from_buyer(self, user_id: int) -> List[Transaction]:
+        pass
+
+    # Add a transaction to the database and return its ID.
+    def add_transaction(self, transaction: Transaction) -> int:
+        pass
+
+    # Lookup a transaction by ID. Return the Transaction if found or None if not found.
+    def lookup_transaction(self, id: int) -> Transaction:
+        pass
+    
     # Return true if all tables in database are empty.
     def is_empty(self):
         with Session(self.engine) as session:
             query = session.query(func.count('*')).select_from(User)
             return query.scalar() == 0
+    
+    # Empty all tables in the database.
+    def delete_all(self):
+        pass
+
 
     def dispose(self):
         self.engine.dispose()
@@ -360,4 +454,12 @@ class Database:
 
         cparams["attrs_before"] = {SQL_COPT_SS_ACCESS_TOKEN: token_struct}
 
-print(Database().is_empty())
+user = User()
+user.username = "mySQL2"
+user.email = "sponge2@gmu.edu"
+user.password = "fl90J3K36n3D0"
+database = Database()
+print(user)
+print(user.username)
+print(user.email)
+print(database.can_register(user))
