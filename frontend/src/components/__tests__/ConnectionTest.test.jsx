@@ -23,6 +23,15 @@ describe('ConnectionTest Component', () => {
         expect(screen.getByText('Back to Login')).toBeInTheDocument()
     })
 
+    test('renders without initial responses', () => {
+        render(<ConnectionTest />)
+        
+        expect(screen.queryByText(/GET Response/)).not.toBeInTheDocument()
+        expect(screen.queryByText(/POST Response/)).not.toBeInTheDocument()
+        expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
+        expect(screen.queryByText(/Error/)).not.toBeInTheDocument()
+    })
+
     test('handles successful GET request', async () => {
         // Mock the API response
         const mockGetResponse = {
@@ -85,42 +94,61 @@ describe('ConnectionTest Component', () => {
         expect(api.post).toHaveBeenCalledTimes(1)
     })
 
-    test('shows loading state', async () => {
-        // Make the API call take some time
+    test('shows loading state for GET request', async () => {
         api.get.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
 
         render(<ConnectionTest />)
         
-        // Click the GET button
         fireEvent.click(screen.getByText('Test GET Request'))
 
-        // Check if loading message appears
         expect(screen.getByText('Loading...')).toBeInTheDocument()
 
-        // Wait for loading to finish
         await waitFor(() => {
             expect(api.get).toHaveBeenCalled()
         })
     })
 
-    test('handles API error', async () => {
-        // Mock an API error
+    test('shows loading state for POST request', async () => {
+        api.post.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
+
+        render(<ConnectionTest />)
+        
+        fireEvent.click(screen.getByText('Test POST Request'))
+
+        expect(screen.getByText('Loading...')).toBeInTheDocument()
+
+        await waitFor(() => {
+            expect(api.post).toHaveBeenCalled()
+        })
+    })
+
+    test('handles GET request error', async () => {
         const errorMessage = 'Network error'
         api.get.mockRejectedValueOnce(new Error(errorMessage))
 
         render(<ConnectionTest />)
         
-        // Click the GET button
         fireEvent.click(screen.getByText('Test GET Request'))
 
-        // Wait for error message to appear
         await waitFor(() => {
             expect(screen.getByText(`Error: ${errorMessage}`)).toBeInTheDocument()
         })
     })
 
-    test('buttons are disabled during loading', async () => {
-        // Make the API call take some time
+    test('handles POST request error', async () => {
+        const errorMessage = '400 Bad Request'
+        api.post.mockRejectedValueOnce(new Error(errorMessage))
+
+        render(<ConnectionTest />)
+        
+        fireEvent.click(screen.getByText('Test POST Request'))
+
+        await waitFor(() => {
+            expect(screen.getByText(`Error: ${errorMessage}`)).toBeInTheDocument()
+        })
+    })
+
+    test('buttons are disabled during GET request', async () => {
         api.get.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
 
         render(<ConnectionTest />)
@@ -128,17 +156,78 @@ describe('ConnectionTest Component', () => {
         const getButton = screen.getByText('Test GET Request')
         const postButton = screen.getByText('Test POST Request')
 
-        // Click GET button
         fireEvent.click(getButton)
 
-        // Check if buttons are disabled
         expect(getButton).toBeDisabled()
         expect(postButton).toBeDisabled()
 
-        // Wait for loading to finish
         await waitFor(() => {
             expect(getButton).not.toBeDisabled()
             expect(postButton).not.toBeDisabled()
         })
+    })
+
+    test('buttons are disabled during POST request', async () => {
+        api.post.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
+
+        render(<ConnectionTest />)
+        
+        const getButton = screen.getByText('Test GET Request')
+        const postButton = screen.getByText('Test POST Request')
+
+        fireEvent.click(postButton)
+
+        expect(getButton).toBeDisabled()
+        expect(postButton).toBeDisabled()
+
+        await waitFor(() => {
+            expect(getButton).not.toBeDisabled()
+            expect(postButton).not.toBeDisabled()
+        })
+    })
+
+    test('clears error on new request', async () => {
+        api.get.mockRejectedValueOnce(new Error('First error'))
+        api.get.mockResolvedValueOnce({ status: 'connected' })
+
+        render(<ConnectionTest />)
+        
+        fireEvent.click(screen.getByText('Test GET Request'))
+        
+        await waitFor(() => {
+            expect(screen.getByText(/Error: First error/)).toBeInTheDocument()
+        })
+
+        fireEvent.click(screen.getByText('Test GET Request'))
+        expect(screen.queryByText(/Error: First error/)).not.toBeInTheDocument()
+    })
+
+    test('keeps previous responses visible', async () => {
+        api.get.mockResolvedValueOnce({ status: 'get_success' })
+        api.post.mockResolvedValueOnce({ status: 'post_success' })
+
+        render(<ConnectionTest />)
+        
+        // Make GET request
+        fireEvent.click(screen.getByText('Test GET Request'))
+        
+        await waitFor(() => {
+            expect(screen.getByText(/"status": "get_success"/)).toBeInTheDocument()
+        })
+
+        // Make POST request
+        fireEvent.click(screen.getByText('Test POST Request'))
+        
+        await waitFor(() => {
+            expect(screen.getByText(/"status": "get_success"/)).toBeInTheDocument()
+            expect(screen.getByText(/"status": "post_success"/)).toBeInTheDocument()
+        })
+    })
+
+    test('back link has correct href', () => {
+        render(<ConnectionTest />)
+        
+        const backLink = screen.getByText('Back to Login')
+        expect(backLink).toHaveAttribute('href', '/login')
     })
 })
