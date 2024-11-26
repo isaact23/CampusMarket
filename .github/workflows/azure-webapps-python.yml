@@ -66,6 +66,9 @@ jobs:
             !venv/
 
   deploy:
+    defaults:
+      run:
+        working-directory: ./backend
     permissions:
       contents: none
     runs-on: ubuntu-latest
