@@ -1,14 +1,17 @@
 # TODO: Re-write queries to be more efficient
 
-import struct, bcrypt, urllib
+import struct, bcrypt, urllib, os
 from azure import identity
 from typing import List
 
 from sqlalchemy import create_engine, event, func, or_, select
 from sqlalchemy.orm import sessionmaker, Session
 
-from .azure_keys import AZURE_DRIVER, AZURE_SERVER, AZURE_DATABASE
 from .database_types import TypeBase, User, Product, Transaction, Message
+
+AZURE_DRIVER = os.environ['AZURE_DRIVER']
+AZURE_SERVER = os.environ['AZURE_SERVER']
+AZURE_DATABASE = os.environ['AZURE_DATABASE']
 
 class Database:
     def __init__(self):
