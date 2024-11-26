@@ -22,7 +22,7 @@ function Login() {
 
   const getButtonContents = () => {
     if (isLoggingIn) {
-      return <i class="fa fa-refresh w3-spin" />
+      return <i className="fa fa-refresh w3-spin" />
     } else {
       return "LOGIN"
     }
