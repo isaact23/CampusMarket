@@ -1,15 +1,15 @@
 import pytest
 from database import *
-from market_types import *
+from database_types import *
 
-def test_add_user():
+def test_add_user(database):
     user = User("shuffles", "shuffles@shuffles.shuffles", "shuffles2")
-    id = add_user(user)
+    id = database.add_user(user)
 
-    assert not is_database_empty()
+    assert not database.is_empty()
 
     assert id == 1
-    found_user = lookup_user(id)
+    found_user = database.lookup_user(id)
     assert found_user is not None
     assert found_user.id == 1
     assert found_user.username == "shuffles"
@@ -20,22 +20,22 @@ def test_add_user():
     dup_user2 = User("freddy", "shuffles@shuffles.shuffles", "mypass")
 
     with pytest.raises(Exception):
-        add_user(dup_user1)
+        database.add_user(dup_user1)
     with pytest.raises(Exception):
-        add_user(dup_user2)
+        database.add_user(dup_user2)
 
 
-def test_delete_user():
+def test_delete_user(database):
     user = User("user2", "a@a.com", "mypass")
-    id = add_user(user)
-    assert delete_user(id)
-    assert lookup_user(id) is None
+    id = database.add_user(user)
+    assert database.delete_user(id)
+    assert database.lookup_user(id) is None
 
-    assert not delete_user(id)
-    assert not delete_user(20)
+    assert not database.delete_user(id)
+    assert not database.delete_user(20)
 
     
 
-def test_missing_user():
-    assert lookup_user(5) is None
-    assert lookup_user(50) is None
+def test_missing_user(database):
+    assert database.lookup_user(5) is None
+    assert database.lookup_user(50) is None

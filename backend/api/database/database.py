@@ -1,311 +1,214 @@
-import pyodbc, struct
+# TODO: Re-write queries to be more efficient
+
+import struct, bcrypt, urllib, os
 from azure import identity
 from typing import List
 
-from .azure_keys import AZURE_SQL_CONNECTIONSTRING
-from .table_setup import TABLE_SETUP_QUERY
-from .market_types import *
+from sqlalchemy import create_engine, event, func, or_, select
+from sqlalchemy.orm import sessionmaker, Session
 
-def is_database_empty() -> bool:
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM dbo.Users")
-        return cursor.fetchone() is None
+from .database_types import TypeBase, User, Product, Transaction, Message
 
-def database_delete_everything():
-    with conn.cursor() as cursor:
-        cursor.execute(TABLE_SETUP_QUERY)
-        conn.commit()
-        print("Reset database contents")
+AZURE_DRIVER = os.environ['AZURE_DRIVER']
+AZURE_SERVER = os.environ['AZURE_SERVER']
+AZURE_DATABASE = os.environ['AZURE_DATABASE']
 
-def add_product(product: Product) -> int:
-    print("Adding product")
+class Database:
+    def __init__(self):
+        self.credential = identity.DefaultAzureCredential()
+        self.engine = self._get_engine()
+        self.localSession = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                        INSERT INTO dbo.Products (Name, Description, Price, OwnerID) 
-                        OUTPUT INSERTED.ID 
-                        VALUES (?, ?, ?, ?)
-                        """, product.name, product.description, product.price, product.owner_id)
-        new_id = cursor.fetchone()[0]
-        print("Successfully added product")
-        conn.commit()
-        return new_id
-
-def lookup_product(id: int) -> Product:
-    print("Looking up product", id)
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT *
-                       FROM dbo.Products
-                       WHERE ID = ?
-                       """, id)
-        res = cursor.fetchone()
-        if res is None:
-            print("Did not find product", id)
-            return None
-        else:
-            print("Found product", id)
-            product = Product(res.Name, res.Description, res.Price, res.OwnerID)
-            product.set_id(res.ID)
-            return product
-
-def delete_product(id: int) -> bool:
-    print("Deleting product", id)
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT * 
-                       FROM dbo.Products
-                       WHERE ID = ?
-                       """, id)
-        product = cursor.fetchone()
-        if product is None:
-            print("Did not find product", id)
-            return False
-        else:
-            cursor.execute("DELETE FROM dbo.Products WHERE ID = ?", id)
-            print("Deleted product", id)
-            conn.commit()
-            return True
-
-def get_homepage() -> List[Product]:
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT ID, Name, Description, Price, OwnerID 
-                       FROM dbo.Products
-                       """)
-        res = cursor.fetchall()
-        products = []
-        for row in res:
-            product = Product(row[1], row[2], row[3], row[4])
-            product.set_id(row[0])
-            products.append(product)
-
-        return products
-
-def search_products(query: str) -> List[Product]:
-    with conn.cursor() as cursor:
-        query = f"%{query.upper()}%"
-        cursor.execute("""
-                       SELECT ID, Name, Description, Price, OwnerID 
-                       FROM dbo.Products
-                       WHERE UPPER(Name) LIKE ? OR
-                       UPPER(Description) LIKE ? ;
-                       """, query, query)
-        res = cursor.fetchall()
-        products = []
-        for row in res:
-            product = Product(row[1], row[2], row[3], row[4])
-            product.set_id(row[0])
-            products.append(product)
-
-        return products
-
-def can_register(user: User) -> bool:
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT * 
-                       FROM dbo.Users 
-                       WHERE Username = ?
-                       OR Email = ?
-                       """, user.username, user.email)
-        res = cursor.fetchone()
-
-        return res is None
-
-def add_user(user: User) -> int:
-    print("Adding user " + user.username)
-
-    if not can_register(user):
-        raise Exception("Failed to register user with username " + user.username)
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                        INSERT INTO dbo.Users (Username, Email, Password) 
-                        OUTPUT INSERTED.ID 
-                        VALUES (?, ?, ?)
-                        """, user.username, user.email, user.password)
-        new_id = cursor.fetchone()[0]
-        print("Successfully added user " + user.username)
-        conn.commit()
-        return new_id
-
-
-def lookup_user(id: int) -> User:
-    print("Looking up user", id)
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT * 
-                       FROM dbo.Users 
-                       WHERE ID = ?
-                       """, id)
-        res = cursor.fetchone()
-        if res is None:
-            print("Did not find user", id)
-            return None
-        else:
-            print("Found user", id)
-            user = User(res.Username, res.Email, res.Password)
-            user.set_id(res.ID)
-            return user
-
-def delete_user(id: int) -> bool:
-    print("Deleting user", id)
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT * 
-                       FROM dbo.Users
-                       WHERE ID = ?
-                       """, id)
-        user = cursor.fetchone()
-        if user is None:
-            print("Did not find user", id)
-            return False
-        else:
-            cursor.execute("DELETE FROM dbo.Users WHERE ID = ?", id)
-            print("Deleted user", id)
-            conn.commit()
-            return True
-
-def add_message(message: Message) -> int:
-    print("Adding message")
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       INSERT INTO dbo.Messages 
-                       (Title, Content, FromUserID, ToUserID) 
-                       OUTPUT INSERTED.ID
-                       VALUES (?, ?, ?, ?)
-                       """, message.title, message.content, message.from_id, message.to_id)
-        
-        print("Message added")
-        new_id = cursor.fetchone()[0]
-        conn.commit()
-        return new_id
-
-def lookup_message(id: int) -> Message:
-    print("Looking up message", id)
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT *
-                       FROM dbo.Messages
-                       WHERE ID = ?
-                       """, id)
-        res = cursor.fetchone()
-        if res is None:
-            print("Did not find message", id)
-            return None
-        else:
-            print("Found message", id)
-            message = Message(res.ToUserID, res.FromUserID, res.Title, res.Content)
-            message.set_id(res.ID)
-            return message
-
-
-
-def get_messages_to(user_id: int) -> List[Message]:
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT ID, Title, Content, FromUserID, ToUserID
-                       FROM dbo.Messages
-                       WHERE ToUserID = ?
-                       """, user_id)
-        
-        res = cursor.fetchall()
-        messages = []
-        for row in res:
-            message = Message(row[4], row[3], row[1], row[2])
-            message.set_id(row[0])
-            messages.append(message)
-        return messages
-
-def get_messages_from(user_id: int) -> List[Message]:
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT ID, Title, Content, FromUserID, ToUserID
-                       FROM dbo.Messages
-                       WHERE FromUserID = ?
-                       """, user_id)
-        
-        res = cursor.fetchall()
-        messages = []
-        for row in res:
-            message = Message(row[4], row[3], row[1], row[2])
-            message.set_id(row[0])
-            messages.append(message)
-        return messages
-
-def delete_message(id: int) -> bool:
-    print("Deleting message", id)
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT * 
-                       FROM dbo.Messages
-                       WHERE ID = ?
-                       """, id)
-        message = cursor.fetchone()
-        if message is None:
-            print("Did not find message", id)
-            return False
-        else:
-            cursor.execute("DELETE FROM dbo.Messages WHERE ID = ?", id)
-            print("Deleted message", id)
-            conn.commit()
-            return True
-
-def add_transaction(transaction: Transaction) -> int:
-    print("Adding transaction")
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       INSERT INTO dbo.Transactions
-                       (ProductID, BuyerID) 
-                       OUTPUT INSERTED.ID
-                       VALUES (?, ?)
-                       """, transaction.product_id, transaction.buyer_id)
-        
-        print("Transaction added")
-        new_id = cursor.fetchone()[0]
-        conn.commit()
-        return new_id
-
-def lookup_transaction(id: int) -> Transaction:
-    print("Looking up transaction", id)
-
-    with conn.cursor() as cursor:
-        cursor.execute("""
-                       SELECT *
-                       FROM dbo.Transactions
-                       WHERE ID = ?
-                       """, id)
-        res = cursor.fetchone()
-        if res is None:
-            print("Did not find transaction", id)
-            return None
-        else:
-            print("Found transaction", id)
-            transaction = Transaction(res.ProductID, res.BuyerID)
-            transaction.set_id(res.ID)
-            return transaction
-
-def get_conn():
-    cred = identity.DefaultAzureCredential(exclude_interactive_browser_credential=False)
-    token_bytes = cred.get_token("https://database.windows.net/.default").token.encode("UTF-16-LE")
-    token_struct = struct.pack(f'<I{len(token_bytes)}s', len(token_bytes), token_bytes)
-    SQL_COPT_SS_ACCESS_TOKEN = 1256
-
-    try:
-        conn = pyodbc.connect(AZURE_SQL_CONNECTIONSTRING, attrs_before={SQL_COPT_SS_ACCESS_TOKEN: token_struct})
-        return conn
+        # Register token provider for SQLAlchemy engine
+        @event.listens_for(self.engine, "do_connect")
+        def provide_token(_, _2, _3, cparams):
+            self._provide_token(cparams)
     
-    except pyodbc.OperationalError:
-        raise RuntimeError("Failed to connect to Azure")
+    # Get a list of products to display on the homepage.
+    def get_homepage(self) -> List[Product]:
+        with Session(self.engine) as session:
+            stmt = select(Product)
+            return session.scalars(stmt).all()
 
-print("Authenticating into database")
-conn = get_conn()
-print("Authenticated into database")
+    # Search products by comparing a query string to the name and descriptions
+    # of products.
+    def search_products(self, query: str) -> List[Product]:
+        with Session(self.engine) as session:
+            queryStr = f'%{query}%'
+            stmt = select(Product).filter(
+                or_(
+                    Product.name.ilike(queryStr),
+                    Product.description.ilike(queryStr)
+                )
+            )
+            return session.scalars(stmt).all()
+
+    # If the email and password correspond to a valid user, return the User
+    # (indicating login allowed), otherwise return None (login rejected).
+    def can_login(self, email, password) -> User:
+        with Session(self.engine) as session:
+            stmt = select(User).where(User.email == email)
+            user = session.scalars(stmt).first()
+            if user is None:
+                return None
+            hashword = user.password
+            if bcrypt.checkpw(password.encode('utf-8'), hashword.encode('utf-8')):
+                return user
+            else:
+                return None
+
+    # If the email or username is already taken, return False.
+    # Otherwise, return True, indicating that the user is allowed to register.
+    def can_register(self, user: User) -> bool:
+        with Session(self.engine) as session:
+            query = session.query(func.count('*')).select_from(User).where(
+                or_(
+                    User.username == user.username, 
+                    User.email == user.email
+                )
+            )
+            return query.scalar() == 0
+
+    # Add a new user. Throws an exception if the user cannot be registered.
+    def add_user(self, user: User) -> int:
+        if not self.can_register(user):
+            raise Exception("Failed to add user (conflicting username or email)")
+
+        with Session(self.engine) as session:
+            session.add(user)
+            session.commit()
+            return user.id
+
+    # Lookup a user by ID. Return the User if found or None if not found.
+    def lookup_user(self, id: int) -> User:
+        with Session(self.engine) as session:
+            stmt = select(User).where(User.id == id)
+            for user in session.scalars(stmt):
+                return user
+            return None
+
+    # Delete a user by ID. Return True if successfully deleted.
+    def delete_user(self, id: int) -> bool:
+        with Session(self.engine) as session:
+            user = self.lookup_user(id)
+            if user is None:
+                return False
+            
+            session.delete(user)
+            session.commit()
+            return True
+    
+    # Add a product to the database and return its ID.
+    def add_product(self, product: Product) -> int:
+        with Session(self.engine) as session:
+            session.add(product)
+            session.commit()
+            return product.id
+
+    # Find a product by ID. Returns the Product if found or None if not found.
+    def lookup_product(self, id: int) -> Product:
+        with Session(self.engine) as session:
+            stmt = select(Product).where(Product.id == id)
+            for product in session.scalars(stmt):
+                return product
+            return None
+
+    # Delete a product by ID. Returns True if successfully deleted.
+    def delete_product(self, id: int) -> bool:
+        with Session(self.engine) as session:
+            product = self.lookup_product(id)
+            if product is None:
+                return False
+            
+            session.delete(product)
+            session.commit()
+            return True
+
+    # Get all messages sent to a user specified by ID.
+    def get_messages_to(self, user_id: int) -> List[Message]:
+        with Session(self.engine) as session:
+            stmt = select(Message).where(Message.to_user_id == user_id)
+            return session.scalars(stmt).all()
+
+    # Get all messages sent from a user specified by ID.
+    def get_messages_from(self, user_id: int) -> List[Message]:
+        with Session(self.engine) as session:
+            stmt = select(Message).where(Message.from_user_id == user_id)
+            return session.scalars(stmt).all()
+
+    # Add a message to the database and return its ID.
+    def add_message(self, message: Message) -> int:
+        with Session(self.engine) as session:
+            session.add(message)
+            session.commit()
+            return message.id
+
+    # Lookup a message by ID. Returns the Message if found or None if not found.
+    def lookup_message(self, id: int) -> Message:
+        with Session(self.engine) as session:
+            stmt = select(Message).where(Message.id == id)
+            for message in session.scalars(stmt):
+                return message
+            return None
+
+
+    # Delete a message by ID. Returns True if successfully deletee.
+    def delete_message(self, id: int) -> bool:
+        with Session(self.engine) as session:
+            message = self.lookup_message(id)
+            if message is None:
+                return False
+            
+            session.delete(message)
+            session.commit()
+            return True
+
+    # Get all transactions for a buyer user ID.
+    def get_transactions_from_buyer(self, user_id: int) -> List[Transaction]:
+        with Session(self.engine) as session:
+            stmt = select(Transaction).where(Transaction.buyer_id == user_id)
+            return session.scalars(stmt).all()
+
+    # Add a transaction to the database and return its ID.
+    def add_transaction(self, transaction: Transaction) -> int:
+        with Session(self.engine) as session:
+            session.add(transaction)
+            session.commit()
+            return transaction.id
+
+    # Lookup a transaction by ID. Return the Transaction if found or None if not found.
+    def lookup_transaction(self, id: int) -> Transaction:
+        with Session(self.engine) as session:
+            stmt = select(Transaction).where(Transaction.id == id)
+            for transaction in session.scalars(stmt):
+                return transaction
+            return None
+    
+    # Return true if all tables in database are empty.
+    def is_empty(self):
+        with Session(self.engine) as session:
+            query = session.query(func.count('*')).select_from(User)
+            return query.scalar() == 0
+    
+    # Reset all tables in the database.
+    def reset(self):
+        TypeBase.metadata.drop_all(self.engine)
+        TypeBase.metadata.create_all(self.engine)
+
+    def dispose(self):
+        self.engine.dispose()
+    
+    def _get_engine(self):
+        connection_string = f"Driver={AZURE_DRIVER};Server=tcp:{AZURE_SERVER}.database.windows.net,1433;Database={AZURE_DATABASE};Encrypt=yes;" + \
+            "TrustServerCertificate=no;Connection Timeout=30"
+        params = urllib.parse.quote(connection_string)
+        url = f"mssql+pyodbc:///?odbc_connect={params}"
+
+        return create_engine(url)
+    
+    def _provide_token(self, cparams):
+        token_bytes = self.credential.get_token("https://database.windows.net/.default").token.encode("UTF-16-LE")
+        token_struct = struct.pack(f'<I{len(token_bytes)}s', len(token_bytes), token_bytes)
+        SQL_COPT_SS_ACCESS_TOKEN = 1256  # This connection option is defined by microsoft in msodbcsql.h
+
+        cparams["attrs_before"] = {SQL_COPT_SS_ACCESS_TOKEN: token_struct}

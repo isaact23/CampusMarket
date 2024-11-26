@@ -8,3 +8,4 @@ class LoginSerializer(serializers.Serializer):
         if not value.endswith('@gmu.edu'):
             raise serializers.ValidationError('Email must be a valid GMU email address (@gmu.edu)')
         return value
+    
