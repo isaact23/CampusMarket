@@ -1,2 +1,2 @@
-. ./venv/bin/activate
+. ../venv/bin/activate
 gunicorn backend.wsgi:application
