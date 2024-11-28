@@ -1,0 +1,17 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      AZURE_DRIVER: ${AZURE_DRIVER}
+      AZURE_SERVER: ${AZURE_SERVER}
+      AZURE_DATABASE: ${AZURE_DATABASE}
+      AZURE_USERNAME: ${AZURE_USERNAME}
+      AZURE_PASSWORD: ${AZURE_PASSWORD}
+      DJANGO_SECRET: ${DJANGO_SECRET}
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
