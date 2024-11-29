@@ -9,20 +9,18 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from .database_types import TypeBase, User, Product, Transaction, Message
 
-AZURE_DRIVER = os.environ['AZURE_DRIVER']
-AZURE_SERVER = os.environ['AZURE_SERVER']
-AZURE_DATABASE = os.environ['AZURE_DATABASE']
+AZURE_DRIVER="{ODBC Driver 18 for SQL Server}"
+AZURE_SERVER="campusmarket-serv"
+AZURE_DATABASE="market-database"
+AZURE_USERNAME="ithomps3"
+
+AZURE_PASSWORD = os.environ['AZURE_PASSWORD']
 
 class Database:
     def __init__(self):
         self.credential = identity.DefaultAzureCredential()
         self.engine = self._get_engine()
         self.localSession = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
-
-        # Register token provider for SQLAlchemy engine
-        @event.listens_for(self.engine, "do_connect")
-        def provide_token(_, _2, _3, cparams):
-            self._provide_token(cparams)
     
     # Get a list of products to display on the homepage.
     def get_homepage(self) -> List[Product]:
@@ -199,16 +197,9 @@ class Database:
         self.engine.dispose()
     
     def _get_engine(self):
-        connection_string = f"Driver={AZURE_DRIVER};Server=tcp:{AZURE_SERVER}.database.windows.net,1433;Database={AZURE_DATABASE};Encrypt=yes;" + \
-            "TrustServerCertificate=no;Connection Timeout=30"
+        connection_string = f"DRIVER={AZURE_DRIVER};SERVER=tcp:campusmarket-serv.database.windows.net,1433;DATABASE={AZURE_DATABASE};" + \
+            f"UID={AZURE_USERNAME};PWD={AZURE_PASSWORD}"
         params = urllib.parse.quote(connection_string)
         url = f"mssql+pyodbc:///?odbc_connect={params}"
 
         return create_engine(url)
-    
-    def _provide_token(self, cparams):
-        token_bytes = self.credential.get_token("https://database.windows.net/.default").token.encode("UTF-16-LE")
-        token_struct = struct.pack(f'<I{len(token_bytes)}s', len(token_bytes), token_bytes)
-        SQL_COPT_SS_ACCESS_TOKEN = 1256  # This connection option is defined by microsoft in msodbcsql.h
-
-        cparams["attrs_before"] = {SQL_COPT_SS_ACCESS_TOKEN: token_struct}
