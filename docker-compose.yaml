@@ -1,17 +1,20 @@
 services:
   backend:
+    image: campusmarket3.azurecr.io/campusmarket-backend
     build: ./backend
-    ports:
-      - "8000:8000"
+    networks:
+      - mynetwork
     environment:
-      AZURE_DRIVER: ${AZURE_DRIVER}
-      AZURE_SERVER: ${AZURE_SERVER}
-      AZURE_DATABASE: ${AZURE_DATABASE}
-      AZURE_USERNAME: ${AZURE_USERNAME}
       AZURE_PASSWORD: ${AZURE_PASSWORD}
       DJANGO_SECRET: ${DJANGO_SECRET}
     command: bash -c "python manage.py runserver 0.0.0.0:8000"
   frontend:
+    image: campusmarket3.azurecr.io/campusmarket-frontend
     build: ./frontend
+    networks:
+      - mynetwork
     ports:
       - "3000:3000"
+networks:
+  mynetwork:
+    driver: bridge
