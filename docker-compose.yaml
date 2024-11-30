@@ -4,6 +4,8 @@ services:
     build: ./backend
     networks:
       - mynetwork
+    ports:
+      - "8000:8000"
     environment:
       AZURE_PASSWORD: ${AZURE_PASSWORD}
       DJANGO_SECRET: ${DJANGO_SECRET}
