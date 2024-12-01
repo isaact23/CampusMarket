@@ -1,12 +1,10 @@
 services:
   backend:
+    env_file: .env
     image: campusmarket.azurecr.io/campusmarket-backend
     build: ./backend
     ports:
       - "8000:8000"
-    environment:
-      AZURE_PASSWORD: ${AZURE_PASSWORD}
-      DJANGO_SECRET: ${DJANGO_SECRET}
     logging:
       driver: json-file
       options:
