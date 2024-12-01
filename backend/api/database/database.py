@@ -1,6 +1,6 @@
 # TODO: Re-write queries to be more efficient
 
-import struct, bcrypt, urllib, os
+import bcrypt, urllib, os, logging
 from azure import identity
 from typing import List
 
@@ -16,11 +16,14 @@ AZURE_USERNAME="ithomps3"
 
 AZURE_PASSWORD = os.environ['AZURE_PASSWORD']
 
+logger = logging.getLogger(__name__)
+
 class Database:
     def __init__(self):
         self.credential = identity.DefaultAzureCredential()
         self.engine = self._get_engine()
         self.localSession = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        logger.debug("Got to the end of init")
     
     # Get a list of products to display on the homepage.
     def get_homepage(self) -> List[Product]:
@@ -44,6 +47,7 @@ class Database:
     # If the email and password correspond to a valid user, return the User
     # (indicating login allowed), otherwise return None (login rejected).
     def can_login(self, email, password) -> User:
+        logging.debug("can_login")
         with Session(self.engine) as session:
             stmt = select(User).where(User.email == email)
             user = session.scalars(stmt).first()
@@ -197,9 +201,12 @@ class Database:
         self.engine.dispose()
     
     def _get_engine(self):
-        connection_string = f"DRIVER={AZURE_DRIVER};SERVER=tcp:campusmarket-serv.database.windows.net,1433;DATABASE={AZURE_DATABASE};" + \
-            f"UID={AZURE_USERNAME};PWD={AZURE_PASSWORD}"
-        params = urllib.parse.quote(connection_string)
-        url = f"mssql+pyodbc:///?odbc_connect={params}"
+        try:
+            connection_string = f"DRIVER={AZURE_DRIVER};SERVER=tcp:campusmarket-serv.database.windows.net,1433;DATABASE={AZURE_DATABASE};" + \
+                f"UID={AZURE_USERNAME};PWD={AZURE_PASSWORD}"
+            params = urllib.parse.quote(connection_string)
+            url = f"mssql+pyodbc:///?odbc_connect={params}"
+        except:
+            logger.error("Something went wrong while initializing the database.")
 
         return create_engine(url)

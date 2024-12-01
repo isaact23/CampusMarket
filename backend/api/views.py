@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
-import bcrypt, json
+import bcrypt, json, logging
 from .database.database import Database
 from .database.database_types import TypeBase, User, Product, Transaction, Message
 
@@ -13,6 +13,8 @@ from rest_framework import status
 from .serializers import LoginSerializer
 
 database = Database()
+
+logger = logging.getLogger(__name__)
 
 @api_view(['GET', 'POST'])
 def test_connection(request):
@@ -47,6 +49,8 @@ def homepage(request):
 
 @api_view(['POST'])
 def login(request):
+    logger.debug("GOT LOGIN REQUEST")
+
     data = json.loads(request.body)
 
     serializer = LoginSerializer(data=request.data)

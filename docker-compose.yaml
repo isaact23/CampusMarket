@@ -7,6 +7,11 @@ services:
     environment:
       AZURE_PASSWORD: ${AZURE_PASSWORD}
       DJANGO_SECRET: ${DJANGO_SECRET}
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
   frontend:
     image: campusmarket.azurecr.io/campusmarket-frontend
     build: ./frontend
