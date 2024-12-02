@@ -7,11 +7,38 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [isWaiting, setIsWaiting] = useState(false);
+
+  const [showError, setShowError] = useState(false)
+  const [errorText, setErrorText] = useState('')
+
   const handleRegister = (e) => {
     e.preventDefault();
 
-    register(username, email, password);
+    setIsWaiting(true)
+    register(username, email, password, (failMessage) => {
+      setIsWaiting(false);
+      setErrorText(failMessage)
+      setShowError(true)
+    });
   };
+
+  const getButtonContents = () => {
+    if (isWaiting) {
+      return <i className="fa fa-refresh w3-spin" />
+    } else {
+      return "REGISTER"
+    }
+  }
+
+  const getErrorBox = () => {
+    if (showError) { return (
+      <div className="w3-panel w3-red w3-round-large">
+        <h4 className="error-text">{errorText}</h4>
+      </div>
+    )}
+    return ''
+  }
 
   return (
     <div className="register-container">
@@ -45,7 +72,10 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit" className="register-button">SIGN UP</button>
+          <button type="submit" className="register-button">
+            {getButtonContents()}
+          </button>
+          {getErrorBox()}
         </form>
         <p>
           Already have an account? <a href="/login">Log in here</a>

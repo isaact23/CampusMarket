@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { login } from '../../services/authApi.js';
-import axios from 'axios'
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   const [showError, setShowError] = useState(false)
   const [errorText, setErrorText] = useState('')
 

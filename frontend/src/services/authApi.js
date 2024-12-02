@@ -13,7 +13,7 @@ export const get_homepage = async () => {
     }
 }
 
-export const register = async (username, email, password) => {
+export const register = async (username, email, password, onFail) => {
     console.log("Sending registration request")
 
     try {
@@ -28,8 +28,10 @@ export const register = async (username, email, password) => {
     } catch (error) {
         if (error.status == 400) {
             console.log("Reigstration rejected")
+            onFail("Could not register. Try different credentials.")
         } else {
             console.error("Account creation failed:", error)
+            onFail("Registration failed. Please try again later.")
         }
         return null
     }

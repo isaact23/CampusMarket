@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { api } from "../services/api"; // Import the API helper from api.js
+import { api } from "../../../../services/api"; // Import the API helper from api.js
 
 const SearchBox = () => {
   const [query, setQuery] = useState(""); // User input for the search query
