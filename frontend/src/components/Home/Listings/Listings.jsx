@@ -36,7 +36,7 @@ const Listings = () => {
   };
 
   return (
-    <div className="listings-container">
+    <div className="listings">
       <div className="listings-box">
       <h1>Items for Sale</h1>
 
