@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './Cart.css'
+//import './Listings.css'
 
-const Cart = () => {
+const Listings = () => {
   // State to manage the list of items for sale
   const [listings, setListings] = useState([]);
   // State to manage input for new listings
@@ -73,4 +73,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default Listings;

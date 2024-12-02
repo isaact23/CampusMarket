@@ -16,7 +16,7 @@ const Toolbar = () => {
                 <h2 className="w3-bar-item w3-left">CampusMarket</h2>
                 <p className="w3-bar-item w3-left w3-white">Token {token}</p>
                 <a className="w3-bar-item w3-button w3-right" onClick={logout}><h2>Log Out</h2></a>
-                <a href="/create" className="w3-bar-item w3-button w3-right"><h2>Create Listing</h2></a>
+                <a href="/home/listings" className="w3-bar-item w3-button w3-right"><h2>Listings</h2></a>
                 <a href="/home" className="w3-bar-item w3-button w3-right"><h2>Home</h2></a>
                 <div className="w3-bar-item w3-right w3-margin">
                     <SearchBox />
