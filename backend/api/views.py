@@ -1,6 +1,4 @@
 # backend/api/views.py
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
 import bcrypt, json, logging
@@ -9,10 +7,13 @@ from .database.database_types import TypeBase, User, Product, Transaction, Messa
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import LoginSerializer
+from .session import SessionManager
 
 database = Database()
+session_manager = SessionManager()
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +50,6 @@ def homepage(request):
 
 @api_view(['POST'])
 def login(request):
-    logger.debug("GOT LOGIN REQUEST")
-
     data = json.loads(request.body)
 
     serializer = LoginSerializer(data=request.data)
@@ -64,12 +63,15 @@ def login(request):
     if user is None:
         return Response("Login rejected by database", status=400)
 
+    token = session_manager.add_user(user.username, user.email)
+
     return Response({
         'status': 'success',
         'message': 'Login successful',
-        'email': email
+        'username': user.username,
+        'email': email,
+        'token': token
     })
-    
 
 @api_view(['POST'])
 def register(request):
@@ -86,7 +88,15 @@ def register(request):
     hash = bcrypt.hashpw(bytes, salt)
 
     new_user = User(username, email, hash)
-    if database.add_user(new_user) is not None:
-        return HttpResponse(f"User successfully registered", status=201)
-    else:
+    if database.add_user(new_user) is None:
         return HttpResponse(f"Failed to register user - user already exists", status=400)
+
+    token = session_manager.add_user(username, email)
+
+    return Response({
+        'status': 'success',
+        'message': 'Registration successful',
+        'username': username,
+        'email': email,
+        'token': token
+    })

@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Login.css';
 import { login } from '../../services/authApi.js';
+import {TokenContext} from "../TokenProvider.jsx"
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
+  const {token, setToken} = useContext(TokenContext)
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -11,15 +15,20 @@ function Login() {
   const [showError, setShowError] = useState(false)
   const [errorText, setErrorText] = useState('')
 
+  const navigate = useNavigate()
+
   const handleLogin = (e) => {
     e.preventDefault();
     setIsLoggingIn(true);
     
-    login(email, password, (failMessage) => {
+    login(email, password, (token) => {
+      setToken(token)
+      navigate('/home')
+    }, (failMessage) => {
       setIsLoggingIn(false);
       setErrorText(failMessage)
       setShowError(true)
-    });
+    })
   };
 
   const getButtonContents = () => {

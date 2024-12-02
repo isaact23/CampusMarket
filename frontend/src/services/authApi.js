@@ -13,7 +13,7 @@ export const get_homepage = async () => {
     }
 }
 
-export const register = async (username, email, password, onFail) => {
+export const register = async (username, email, password, onSuccess, onFail) => {
     console.log("Sending registration request")
 
     try {
@@ -23,8 +23,7 @@ export const register = async (username, email, password, onFail) => {
             password: password
         })
         console.log("Registered successfully")
-        window.location = '/home'
-        return response
+        onSuccess(response.data.token)
     } catch (error) {
         if (error.status == 400) {
             console.log("Reigstration rejected")
@@ -37,7 +36,7 @@ export const register = async (username, email, password, onFail) => {
     }
 }
 
-export const login = async (email, password, onFail) => {
+export const login = async (email, password, onSuccess, onFail) => {
     console.log("Sending login request")
 
     try {
@@ -46,8 +45,7 @@ export const login = async (email, password, onFail) => {
             password: password
         })
         console.log("Logged in successfully")
-        window.location = '/home'
-        return response
+        onSuccess(response.data.token)
     } catch (error) {
         if (error.status == 400) {
             console.log("Login rejected")

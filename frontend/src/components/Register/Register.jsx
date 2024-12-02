@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Register.css';
 import { register } from '../../services/authApi.js';
+import {TokenContext} from "../TokenProvider.jsx"
+import { useNavigate } from 'react-router-dom'
 
 function Register() {
+  const {token, setToken} = useContext(TokenContext)
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,15 +16,20 @@ function Register() {
   const [showError, setShowError] = useState(false)
   const [errorText, setErrorText] = useState('')
 
+  const navigate = useNavigate()
+
   const handleRegister = (e) => {
     e.preventDefault();
 
     setIsWaiting(true)
-    register(username, email, password, (failMessage) => {
+    register(username, email, password, (token) => {
+      setToken(token)
+      navigate('/home')
+    }, (failMessage) => {
       setIsWaiting(false);
       setErrorText(failMessage)
       setShowError(true)
-    });
+    })
   };
 
   const getButtonContents = () => {
