@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-//import './Listings.css'
+import './Listings.css'
 
 const Listings = () => {
   // State to manage the list of items for sale
@@ -36,7 +36,8 @@ const Listings = () => {
   };
 
   return (
-    <div>
+    <div className="listings-container">
+      <div className="listings-box">
       <h1>Items for Sale</h1>
 
       {/* Input to add new item */}
@@ -70,6 +71,7 @@ const Listings = () => {
           </li>
         ))}
       </ul>
+      </div>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import './Content.css'
 
 const Content = () => {
     /*const [products, setProducts] = useState([])

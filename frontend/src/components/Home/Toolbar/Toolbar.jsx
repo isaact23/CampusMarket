@@ -1,6 +1,7 @@
 import SearchBox from "./SearchBox/SearchBox.jsx"
 import {TokenContext} from "../../../contexts/TokenContext.jsx"
 import { useContext } from 'react'
+import './Toolbar.css'
 
 const Toolbar = () => {
     const {token, setToken} = useContext(TokenContext)
