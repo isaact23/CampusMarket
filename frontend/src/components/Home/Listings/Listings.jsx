@@ -4,21 +4,22 @@ import React, { useState } from 'react';
 const Listings = () => {
   // State to manage the list of items for sale
   const [listings, setListings] = useState([]);
+  
   // State to manage input for new listings
   const [newItem, setNewItem] = useState('');
   const [newAvailability, setNewAvailability] = useState(true);
 
   // Handle adding a new listing
   function handleAddListing() {
-        if (newItem.trim()) {
-            setListings([
-                ...listings,
-                { id: Date.now(), name: newItem, available: newAvailability }
-            ]);
-            setNewItem('');
-            setNewAvailability(true);
-        }
+    if (newItem.trim()) {
+      setListings([
+        ...listings,
+        { id: Date.now(), name: newItem, available: newAvailability }
+      ]);
+      setNewItem('');
+      setNewAvailability(true);
     }
+  }
 
   // Handle removing a listing
   const handleRemoveListing = (id) => {

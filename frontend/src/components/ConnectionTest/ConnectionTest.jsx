@@ -1,6 +1,6 @@
 // frontend/src/components/ConnectionTest.jsx
 import { useState } from 'react'
-import { api } from '../services/api'
+import { api } from '../../services/api'
 import './ConnectionTest.css';
 
 function ConnectionTest() {
