@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import './Login.css';
 import { login } from '../../services/authApi.js';
-import {TokenContext} from "../TokenProvider.jsx"
+import { TokenContext } from "../../contexts/TokenContext.jsx"
 import { useNavigate } from 'react-router-dom'
 
 function Login() {
@@ -80,8 +80,8 @@ function Login() {
           {getErrorBox()}
         </form>
         <p>
-        Don’t have an account? <a href="/register">Create one here</a>
-      </p>
+          Don’t have an account? <a href="/register">Create one here</a>
+        </p>
       </div>
     </div>
   );

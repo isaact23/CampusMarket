@@ -1,11 +1,5 @@
 /* App.css */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #dbe7de, #206730); /* Gradient background */
-  height: 100vh;
-}
+
 
 .error-text {
   color: white

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import './Register.css';
 import { register } from '../../services/authApi.js';
-import {TokenContext} from "../TokenProvider.jsx"
+import {TokenContext} from "../../contexts/TokenContext.jsx"
 import { useNavigate } from 'react-router-dom'
 
 function Register() {

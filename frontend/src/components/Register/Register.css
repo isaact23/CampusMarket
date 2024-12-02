@@ -1,16 +1,5 @@
 /* Register.css */
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #dbe7de, #206730); /* Gradient background */
-}
-
-p {
-  color: black;
-}
-
 .register-container {
   display: flex;
   justify-content: center;
@@ -50,6 +39,17 @@ p {
   border-radius: 5px;
   background-color: #f9f9f9;
   color: #333;
+}
+
+.register-box p {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #777;
+}
+
+.register-box a {
+  color: #14591f;
+  text-decoration: none;
 }
 
 .forgot-password {
