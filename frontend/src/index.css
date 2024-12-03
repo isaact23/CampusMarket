@@ -14,3 +14,71 @@
 body {
   height: 100vh;
 }
+
+/* Form Elements Styling */
+input[type="text"], input[type="checkbox"] {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="text"] {
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* Add Listing Button */
+button {
+  background-color: #205e1a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #205e1a;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Buttons inside the list item */
+button.toggle, button.remove {
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.toggle {
+  background-color: #0275d8;
+}
+
+button.remove {
+  background-color: #d9534f;
+}
+
+button.toggle:hover {
+  background-color: #025aa5;
+}
+
+button.remove:hover {
+  background-color: #c9302c;
+}

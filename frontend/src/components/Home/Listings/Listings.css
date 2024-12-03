@@ -4,9 +4,6 @@
   align-items: center;
   height: 70vh;
 }
-.listings ul {
-  color: black
-}
 
 /* Title Styling */
 .listings h1 {
@@ -18,55 +15,14 @@
 .listings label {
   color: black;
 }
-
-/* Form Elements Styling */
-input[type="text"], input[type="checkbox"] {
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 10px 0;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-input[type="text"] {
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-input[type="checkbox"] {
-  margin-right: 8px;
-}
-
-/* Add Listing Button */
-button {
-  background-color: #205e1a;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #205e1a;
-}
-
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* List of Items Styling */
-ul {
+.listings ul {
+  color: black;
   list-style: none;
   padding: 0;
   margin-top: 20px;
 }
 
-li {
+.listings li {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -78,7 +34,7 @@ li {
   transition: background-color 0.3s ease;
 }
 
-li:hover {
+.listings li:hover {
   background-color: #f0f0f0;
 }
 
@@ -92,30 +48,3 @@ li:hover {
   color: #888;
 }
 
-/* Buttons inside the list item */
-button.toggle, button.remove {
-  background-color: #f0ad4e;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  margin-left: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button.toggle {
-  background-color: #0275d8;
-}
-
-button.remove {
-  background-color: #d9534f;
-}
-
-button.toggle:hover {
-  background-color: #025aa5;
-}
-
-button.remove:hover {
-  background-color: #c9302c;
-}
