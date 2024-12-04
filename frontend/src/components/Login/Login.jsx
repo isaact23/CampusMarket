@@ -1,15 +1,15 @@
 import React, { useState, useContext } from 'react';
 import './Login.css';
 import { login } from '../../services/authApi.js';
-import { TokenContext } from "../../contexts/TokenContext.jsx"
+import { AuthContext } from "../../contexts/AuthContext.jsx"
 import { useNavigate } from 'react-router-dom'
 import LoadingIcon from '../LoadingIcon.jsx'
 
 function Login() {
-  const {token, setToken} = useContext(TokenContext)
+  const authApi = useContext(AuthContext)
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [localEmail, setLocalEmail] = useState('');
+  const [localPassword, setLocalPassword] = useState('');
   
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -22,8 +22,9 @@ function Login() {
     e.preventDefault();
     setIsLoggingIn(true);
     
-    login(email, password, (token) => {
-      setToken(token)
+    login(localEmail, localPassword, (token) => {
+      authApi.setEmail(email)
+      authApi.setToken(token)
       navigate('/home')
     }, (failMessage) => {
       setIsLoggingIn(false);
@@ -59,8 +60,8 @@ function Login() {
             type="email"
             id="email"
             placeholder="Type your school email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={localEmail}
+            onChange={(e) => setLocalEmail(e.target.value)}
             required
           />
           <label htmlFor="password">Password:</label>
@@ -68,8 +69,8 @@ function Login() {
             type="password"
             id="password"
             placeholder="Type your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={localPassword}
+            onChange={(e) => setLocalPassword(e.target.value)}
             required
           />
           <div className="forgot-password">

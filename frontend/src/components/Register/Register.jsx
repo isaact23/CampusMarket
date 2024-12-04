@@ -1,16 +1,16 @@
 import React, { useState, useContext } from 'react';
 import './Register.css';
 import { register } from '../../services/authApi.js';
-import { TokenContext } from "../../contexts/TokenContext.jsx"
+import { AuthContext } from "../../contexts/AuthContext.jsx"
 import { useNavigate } from 'react-router-dom'
 import LoadingIcon from '../LoadingIcon.jsx'
 
 function Register() {
-  const {token, setToken} = useContext(TokenContext)
+  const authApi = useContext(AuthContext)
 
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [localUsername, setLocalUsername] = useState('');
+  const [localEmail, setLocalEmail] = useState('');
+  const [localPassword, setLocalPassword] = useState('');
 
   const [isWaiting, setIsWaiting] = useState(false);
 
@@ -23,8 +23,9 @@ function Register() {
     e.preventDefault();
 
     setIsWaiting(true)
-    register(username, email, password, (token) => {
-      setToken(token)
+    register(localUsername, localEmail, localPassword, (token) => {
+      authApi.setEmail(localEmail)
+      authApi.setToken(token)
       navigate('/home')
     }, (failMessage) => {
       setIsWaiting(false);
@@ -60,8 +61,8 @@ function Register() {
             type="text"
             id="username"
             placeholder="Enter your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={localUsername}
+            onChange={(e) => setLocalUsername(e.target.value)}
             required
           />
           <label htmlFor="email">Student Email:</label>
@@ -69,8 +70,8 @@ function Register() {
             type="email"
             id="email"
             placeholder="Type your school email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={localEmail}
+            onChange={(e) => setLocalEmail(e.target.value)}
             required
           />
           <label htmlFor="password">Password:</label>
@@ -78,8 +79,8 @@ function Register() {
             type="password"
             id="password"
             placeholder="Type your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={localPassword}
+            onChange={(e) => setLocalPassword(e.target.value)}
             required
           />
           <button type="submit" className="register-button">
