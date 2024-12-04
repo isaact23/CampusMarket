@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
 import './Register.css';
 import { register } from '../../services/authApi.js';
-import {TokenContext} from "../../contexts/TokenContext.jsx"
+import { TokenContext } from "../../contexts/TokenContext.jsx"
 import { useNavigate } from 'react-router-dom'
+import LoadingIcon from '../LoadingIcon.jsx'
 
 function Register() {
   const {token, setToken} = useContext(TokenContext)
@@ -34,7 +35,7 @@ function Register() {
 
   const getButtonContents = () => {
     if (isWaiting) {
-      return <i className="fa fa-refresh w3-spin" />
+      return <LoadingIcon />
     } else {
       return "REGISTER"
     }

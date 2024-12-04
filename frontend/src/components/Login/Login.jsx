@@ -3,6 +3,7 @@ import './Login.css';
 import { login } from '../../services/authApi.js';
 import { TokenContext } from "../../contexts/TokenContext.jsx"
 import { useNavigate } from 'react-router-dom'
+import LoadingIcon from '../LoadingIcon.jsx'
 
 function Login() {
   const {token, setToken} = useContext(TokenContext)
@@ -33,7 +34,7 @@ function Login() {
 
   const getButtonContents = () => {
     if (isLoggingIn) {
-      return <i className="fa fa-refresh w3-spin" />
+      return <LoadingIcon />
     } else {
       return "LOGIN"
     }

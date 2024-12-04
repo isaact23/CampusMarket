@@ -16,7 +16,7 @@ body {
 }
 
 /* Form Elements Styling */
-input[type="text"], input[type="checkbox"] {
+input {
   border: 2px solid #ddd;
   border-radius: 8px;
   padding: 10px;
