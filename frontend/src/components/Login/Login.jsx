@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import './Login.css';
-import { login } from '../../services/authApi.js';
 import { AuthContext } from "../../contexts/AuthContext.jsx"
 import { useNavigate } from 'react-router-dom'
 import LoadingIcon from '../LoadingIcon.jsx'
@@ -22,7 +21,7 @@ function Login() {
     e.preventDefault();
     setIsLoggingIn(true);
     
-    login(localEmail, localPassword, (token) => {
+    authApi.login(localEmail, localPassword, (token) => {
       authApi.setEmail(email)
       authApi.setToken(token)
       navigate('/home')

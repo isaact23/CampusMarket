@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import './Register.css';
-import { register } from '../../services/authApi.js';
 import { AuthContext } from "../../contexts/AuthContext.jsx"
 import { useNavigate } from 'react-router-dom'
 import LoadingIcon from '../LoadingIcon.jsx'
@@ -23,7 +22,7 @@ function Register() {
     e.preventDefault();
 
     setIsWaiting(true)
-    register(localUsername, localEmail, localPassword, (token) => {
+    authApi.register(localUsername, localEmail, localPassword, (token) => {
       authApi.setEmail(localEmail)
       authApi.setToken(token)
       navigate('/home')
