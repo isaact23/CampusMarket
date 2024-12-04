@@ -5,6 +5,24 @@
   height: 70vh;
 }
 
+.listings-available {
+  display: flex;
+  align-items: center;
+}
+
+.listings-available label {
+  margin-left: 10px; /* Adjust margin as needed */
+}
+
+.listings-available input[type="checkbox"] {
+  margin-right: 5px; /* Adjust margin as needed */
+}
+
+.listings input[type="checkbox"] {
+  float: left;
+  display: flex;
+}
+
 /* Title Styling */
 .listings h1 {
   color: black;

@@ -41,20 +41,21 @@ const Listings = () => {
       <h1>Items for Sale</h1>
 
       {/* Input to add new item */}
-      <input
-        type="text"
-        value={newItem}
-        onChange={(e) => setNewItem(e.target.value)}
-        placeholder="Enter item name"
-      />
-      <label>
-        Available:
+      <div className="listings-available">
         <input
-          type="checkbox"
-          checked={newAvailability}
-          onChange={(e) => setNewAvailability(e.target.checked)}
+          type="text"
+          value={newItem}
+          onChange={(e) => setNewItem(e.target.value)}
+          placeholder="Enter item name"
         />
-      </label>
+        <label for="available-checkbox">Available:
+          <input
+            type="checkbox"
+            id="available-checkbox"  checked={newAvailability}
+            onChange={(e) => setNewAvailability(e.target.checked)}
+          />
+        </label>
+      </div>
       <button onClick={handleAddListing}>Add Listing</button>
 
       <ul>
