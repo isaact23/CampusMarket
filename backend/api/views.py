@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import LoginSerializer
-from .session import SessionManager
+from .session_manager import SessionManager
 
 database = Database()
 session_manager = SessionManager()
@@ -63,7 +63,7 @@ def login(request):
     if user is None:
         return Response("Login rejected by database", status=400)
 
-    token = session_manager.add_user(user.email)
+    token = session_manager.add_authorized_user(user.id, user.email)
 
     return Response({
         'status': 'success',
@@ -91,7 +91,7 @@ def register(request):
     if database.add_user(new_user) is None:
         return HttpResponse(f"Failed to register user - user already exists", status=400)
 
-    token = session_manager.add_user(email)
+    token = session_manager.add_authorized_user(new_user.id, email)
 
     return Response({
         'status': 'success',
@@ -103,16 +103,15 @@ def register(request):
 
 @api_view(['POST'])
 def add_product(request):
+    user = session_manager.get_authorized_user(request)
+    if user is None:
+        return Response("Access denied", status=400)
+    
     data = json.loads(request.body)
-    email = data.get('email')
-    token = data.get('token')
-
-    if not session_manager.validate_user(email, token):
-        return
 
     name = data.get('name')
     description = data.get('description')
     price = data.get('price')
     availability = data.get('availability')
 
-    database.add_product(Product(name, description, price, owner_id))
+    database.add_product(Product(name, description, price, user.id))

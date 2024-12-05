@@ -74,6 +74,88 @@ class AuthApi {
     logout = () => {
         this.username = ''
         this.email = ''
-        this.password = ''
+        this.token = ''
+    }
+
+    /* Send a GET request to the backend without authentication. */
+    async get(endpoint) {
+        try {
+          const response = await fetch(`/api/${endpoint}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          if (!response.ok) {
+            throw new ApiError(`API Error: ${response.statusText}`, response.status);
+          }
+          return response.json();
+        } catch (error) {
+          throw error;
+        }
+    }
+
+    /* Send a GET request to the backend with authentication. */
+    async getAuth(endpoint) {
+        if (this.token.length == 0) {
+            throw new Error("Cannot run getAuth without authorization")
+        }
+        try {
+          const response = await fetch(`/api/${endpoint}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': this.email + ',' + this.token,
+                'Content-Type': 'application/json',
+            }
+          });
+          if (!response.ok) {
+            throw new ApiError(`API Error: ${response.statusText}`, response.status);
+          }
+          return response.json();
+        } catch (error) {
+          throw error;
+        }
+    }
+
+    /* Send a POST request to the backend without authentication. */
+    async post(endpoint, data) {
+        try {
+          const response = await fetch(`/api/${endpoint}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          });
+          if (!response.ok) {
+            throw new ApiError(`API Error: ${response.statusText}`, response.status);
+          }
+          return response.json();
+        } catch (error) {
+          throw error;
+        }
+    }
+
+    /* Send a POST request to the backend with authentication. */
+    async postAuth(endpoint, data) {
+        if (this.token.length == 0) {
+            throw new Error("Cannot run postAuth without authorization")
+        }
+        try {
+          const response = await fetch(`/api/${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': this.email + ',' + this.token,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          });
+          if (!response.ok) {
+            throw new ApiError(`API Error: ${response.statusText}`, response.status);
+          }
+          return response.json();
+        } catch (error) {
+          throw error;
+        }
     }
 }

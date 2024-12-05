@@ -29,5 +29,9 @@
         "jsdom": "^25.0.1",
         "vite": "^5.4.8",
         "vitest": "^2.1.5"
+    },
+    "imports": {
+        "#root/src/contexts/*.js": "contexts/*.js",
+        "#root/src/services/*.js": "services/*.js"
     }
 }
