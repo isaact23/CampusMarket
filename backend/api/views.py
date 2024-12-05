@@ -115,3 +115,13 @@ def add_product(request):
     availability = data.get('availability')
 
     database.add_product(Product(name, description, price, user.id))
+
+@api_view(['GET'])
+def search(request):
+    query = request.GET.get('query')
+
+    # TODO
+    return Response({
+        'status': 'success',
+        'message': 'Backend received request to search. Search not yet implemented.'
+    })

@@ -7,4 +7,5 @@ urlpatterns = [
     path('homepage/', views.homepage, name='homepage'),
     path('addProduct/', views.add_product, name='add product'),
     path('test/', views.test_connection, name='test'),  # Changed from 'endpoint/' to 'test/' to match React code
+    path('search/', views.search, name='search')
 ]

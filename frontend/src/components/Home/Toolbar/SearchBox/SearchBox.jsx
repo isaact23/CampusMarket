@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { api } from "../../../../services/api"; // Import the API helper from api.js
 import "./SearchBox.css"
+import { AuthContext } from "../../../contexts/AuthContext.jsx"
 
 const SearchBox = () => {
+  const authApi = useContext(AuthContext)
+
   const [query, setQuery] = useState(""); // User input for the search query
   const [results, setResults] = useState([]); // Search results from the backend
   const [loading, setLoading] = useState(false); // Loading indicator
@@ -20,7 +22,7 @@ const SearchBox = () => {
 
     try {
       // Make the API call using the `api.get` helper
-      const response = await api.get(`search/?query=${encodeURIComponent(query)}`);
+      const response = await authApi.get(`search/?query=${encodeURIComponent(query)}`);
       setResults(response); // Update results with API response
     } catch (err) {
       setError(err.message || "An error occurred while fetching search results."); // Handle errors

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import './Listings.css'
 import LoadingIcon from '../../LoadingIcon.jsx'
-import { api } from '../../../services/api.js'
+import { AuthContext } from "../../../contexts/AuthContext.jsx"
 
 const Listings = () => {
+  const authApi = useContext(AuthContext)
+
   // State to manage the list of items for sale
   const [listings, setListings] = useState([]);
   
@@ -21,7 +23,7 @@ const Listings = () => {
       setWaiting(true)
       parseInt(price)
 
-      api.post('/addProduct', {
+      authApi.postAuth('/addProduct', {
         name: newItem,
         description: '',
         price: price,
