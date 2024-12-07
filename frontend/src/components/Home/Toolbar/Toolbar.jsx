@@ -23,16 +23,16 @@ const Toolbar = () => {
 
     return (
         <div className="toolbar">
-            <div className="home-header w3-bar w3-card-4 w3-theme-d3 w3-top">
-                <a className="w3-bar-item w3-button w3-left" onClick={openHome}><h2>CampusMarket</h2></a>
-                <p className="w3-bar-item w3-left w3-white">Token {token}</p>
-                <a className="w3-bar-item w3-button w3-right" onClick={logout}><h2>Log Out</h2></a>
-                <a className="w3-bar-item w3-button w3-right" onClick={openListings}><h2>Listings</h2></a>
-                <a className="w3-bar-item w3-button w3-right" onClick={openHome}><h2>Home</h2></a>
-                <div className="w3-bar-item w3-right w3-margin">
+            <nav className="nav-bar">
+                <div onClick={openHome} className="nav-logo">CampusMarket</div>
+                <div className="nav-links">
+                    <p className="nav-token">Token {token}</p>
                     <SearchBox />
+                    <button onClick={openHome} className="nav-button">Home</button>
+                    <button onClick={openListings} className="nav-button">Listings</button>
+                    <button onClick={logout} className="nav-button">Log Out</button>
                 </div>
-            </div>
+            </nav>
         </div>
     )
 }
