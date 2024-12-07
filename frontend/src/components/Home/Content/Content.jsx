@@ -14,8 +14,33 @@ const Content = () => {
 
     var cards = []
     cards.push(
-        <div className="home-card w3-panel w3-margin w3-card-4 w3-black">
+        <div className="home-card">
             <h1>Dell Enterprise 2500</h1>
+        </div>
+    )
+    cards.push(
+        <div className="home-card">
+            <h1>Dell Enterprise 2600</h1>
+        </div>
+    )
+    cards.push(
+        <div className="home-card">
+            <h1>Dell Enterprise 2700</h1>
+        </div>
+    )
+    cards.push(
+        <div className="home-card">
+            <h1>Dell Enterprise 2800</h1>
+        </div>
+    )
+    cards.push(
+        <div className="home-card">
+            <h1>Dell Enterprise 2900</h1>
+        </div>
+    )
+    cards.push(
+        <div className="home-card">
+            <h1>Dell Enterprise 3000</h1>
         </div>
     )
 
