@@ -1,3 +1,55 @@
+/* Toolbar.css */
 .toolbar {
+    width: 100%;
     height: 100px;
+    background-color: #f5f5f5;
+ }
+ 
+ .nav-bar {
+    background-color: #205e1a;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ }
+ 
+ .nav-token {
+    background: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    margin: 0 15px;
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+ }
+
+.nav-logo {
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-button {
+    color: white;
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.nav-button:hover {
+    background-color: #184815;
 }
