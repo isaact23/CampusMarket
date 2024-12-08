@@ -114,7 +114,24 @@ def add_product(request):
     price = data.get('price')
     availability = data.get('availability')
 
-    database.add_product(Product(name, description, price, user.id))
+    product = Product(name, description, price, user.id)
+    database.add_product(product)
+
+    return JsonResponse({
+        'product_id': product.id
+    })
+
+@api_view(['GET'])
+def get_products(request):
+    user = session_manager.get_authorized_user(request)
+    if user is None:
+        return Response("Access denied", status=400)
+
+    products = database.list_products(user.id)
+    print(products)
+
+    return JsonResponse(products)
+
 
 @api_view(['GET'])
 def search(request):

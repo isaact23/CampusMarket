@@ -114,6 +114,14 @@ class Database:
             for product in session.scalars(stmt):
                 return product
             return None
+    
+    # List products by Owner ID.
+    def list_products(self, owner_id: int) -> List[Product]:
+        with Session(self.engine) as session:
+            stmt = select(Product).filter(
+                Product.owner_id == owner_id
+            )
+            return session.scalars(stmt).all()
 
     # Delete a product by ID. Returns True if successfully deleted.
     def delete_product(self, id: int) -> bool:
