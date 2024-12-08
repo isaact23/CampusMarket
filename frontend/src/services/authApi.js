@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { useState } from 'react'
 
 export default class AuthApi {
     constructor() {
         this.email = ''
         this.token = ''
+        this.isLoggedIn = true
     }
 
     getEmail = () => this.email
@@ -12,6 +12,8 @@ export default class AuthApi {
 
     setEmail = (email) => {this.email = email; console.log("Set email to " + email)}
     setToken = (token) => this.token = token
+
+    getIsLoggedIn = () => this.isLoggedIn
 
     getHomepage = async () => {
         console.log("Getting homepage products")
@@ -59,6 +61,7 @@ export default class AuthApi {
             })
             console.log("Logged in successfully")
             onSuccess(response.data.token)
+            this.isLoggedIn = true
         } catch (error) {
             if (error.status == 400) {
                 console.log("Login rejected")
@@ -72,9 +75,9 @@ export default class AuthApi {
     }
 
     logout = () => {
-        this.username = ''
         this.email = ''
         this.token = ''
+        this.isLoggedIn = false
     }
 
     /* Send a GET request to the backend without authentication. */

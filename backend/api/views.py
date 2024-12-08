@@ -129,9 +129,17 @@ def get_products(request):
         return Response("Access denied", status=400)
 
     products = database.list_products(user.id)
-    logger.critical(products)
+    products_json = []
+    for product in products:
+        products_json.append({
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'owner_id': product.owner_id
+        })
 
-    return JsonResponse(products)
+    return JsonResponse({'products': products_json})
 
 
 @api_view(['GET'])

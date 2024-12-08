@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom'
 import './Login.css';
 import { AuthContext } from "../../contexts/AuthContext.jsx"
-import { useNavigate } from 'react-router-dom'
 import LoadingIcon from '../LoadingIcon.jsx'
 
 function Login() {
@@ -20,6 +20,7 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
     setIsLoggingIn(true);
+    setShowError(false);
     
     authApi.login(localEmail, localPassword, (token) => {
       authApi.setEmail(localEmail)
@@ -51,6 +52,7 @@ function Login() {
 
   return (
     <div className="login-container">
+      {authApi.getIsLoggedIn() ? <Navigate to="/home" /> : ''}
       <div className="login-box">
         <h2>Sign in</h2>
         <form onSubmit={handleLogin}>

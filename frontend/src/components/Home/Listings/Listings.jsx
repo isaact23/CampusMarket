@@ -22,14 +22,23 @@ const Listings = () => {
 
   useEffect(() => {
     authApi.getAuth('/getProducts')
-    .then(products => {
-      console.log(products)
+    .then(res => {
+      console.log(res.products)
+      let newListings = []
+      res.products.forEach(product => {
+        newListings.push({
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          owner_id: product.owner_id
+        })
+        setListings(newListings)
+      })
       setLoading(false)
-      setListings([
-        {id: 4, name: "successfullyLoadedItem", available: true}
-      ])
     })
     .catch(err => {
+      console.error(err)
       setErrorText('An error occurred while fetching products.')
       setShowError(true)
     })
@@ -41,7 +50,7 @@ const Listings = () => {
       setWaiting(true)
       parseInt(price)
 
-      authApi.postAuth('/addProduct', {
+      authApi.postAuth('/addProduct/', {
         name: newItem,
         description: '',
         price: price,
@@ -54,7 +63,10 @@ const Listings = () => {
         console.log(res.product_id)
         setListings([
           ...listings,
-          { id: Date.now(), name: newItem, available: newAvailability }
+          { name: newItem,
+            description: "Placeholder description",
+            price: price,
+            available: newAvailability }
         ]);
         setNewItem('');
         setNewAvailability(true);
