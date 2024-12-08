@@ -65,14 +65,18 @@ const Listings = () => {
         onChange={(e) => setNewItem(e.target.value)}
         placeholder="Enter item name"
       />
-      <input
-        type="number" min="1" step="0.01"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
-        placeholder="Enter price"
-      />
+      <div className="price-input">
+        <input
+          type="number"
+          min="1"
+          step="0.01"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          placeholder="1.00"
+        />
+      </div>
       <div className="listings-available">
-        <label for="available-checkbox">Available:</label>
+        <label for="available-checkbox">Item is currently available:</label>
         <input
           type="checkbox"
           id="available-checkbox"  checked={newAvailability}
@@ -88,10 +92,10 @@ const Listings = () => {
         {listings.map((item) => (
           <li key={item.id}>
             <span>{item.name} - {item.available ? 'Available' : 'Not Available'}</span>
-            <button onClick={() => handleToggleAvailability(item.id)}>
+            <button className="toggle" onClick={() => handleToggleAvailability(item.id)}>
               Toggle Availability
             </button>
-            <button onClick={() => handleRemoveListing(item.id)}>
+            <button  className="remove" onClick={() => handleRemoveListing(item.id)}>
               Remove
             </button>
           </li>

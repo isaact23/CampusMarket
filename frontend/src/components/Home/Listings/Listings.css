@@ -1,68 +1,195 @@
 .listings {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70vh;
+  padding: 40px;
+  min-height: calc(100vh - 100px);
+  background: #f5f5f5;
 }
 
+.listings-box {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.listings h1 {
+  color: #205e1a;
+  font-size: 28px;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.listings input[type="text"],
+.listings input[type="number"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 8px 0 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  color: #000;
+  transition: border-color 0.2s;
+}
+
+.listings input[type="text"]:focus,
+.listings input[type="number"]:focus {
+  border-color: #205e1a;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(32, 94, 26, 0.1);
+}
+
+/* Price input styling */
+.price-input {
+  position: relative;
+}
+
+.price-input::before {
+  content: "$";
+  position: absolute;
+  top: 26%;
+  left: 5px;
+  color: #205e1a;
+  pointer-events: none;
+  font-size: 16px;
+}
+
+/* Availability toggle styling */
 .listings-available {
   display: flex;
   align-items: center;
-}
-
-.listings-available label {
-  margin-left: 10px; /* Adjust margin as needed */
+  margin: 15px 0 25px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f8f8f8;
 }
 
 .listings-available input[type="checkbox"] {
-  margin-right: 5px; /* Adjust margin as needed */
+  appearance: none;
+  width: 50px;
+  height: 26px;
+  background: #ddd;
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-left: 10px;
+  top: 1px;
 }
 
-.listings input[type="checkbox"] {
-  float: left;
-  display: flex;
+.listings-available input[type="checkbox"]:checked {
+  background: #205e1a;
 }
 
-/* Title Styling */
-.listings h1 {
-  color: black;
-  margin-bottom: 20px;
-  font-size: 2rem;
+.listings-available input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  top: 2px;
+  background: white;
+  transition: transform 0.3s;
 }
 
-.listings label {
-  color: black;
+.listings-available input[type="checkbox"]:checked::before {
+  transform: translateX(26px);
 }
+
+.listings-available label {
+  color: #205e1a;
+  font-size: 16px;
+}
+
+/* Add button styling */
+.listings button {
+  background: #205e1a;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.listings button:hover {
+  background: #1a4d15;
+}
+
+.listings button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Listed items styling */
 .listings ul {
-  color: black;
   list-style: none;
   padding: 0;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .listings li {
+  background: white;
+  padding: 15px 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #eee;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f9f9f9;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .listings li:hover {
-  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.item-name {
-  font-weight: bold;
-  color: #4CAF50;
+.listings li button {
+  width: auto;
+  margin: 0 5px;
+  padding: 8px 16px;
+  font-size: 14px;
 }
 
-.item-status {
-  font-style: italic;
-  color: #888;
+.listings li button.toggle {
+  background: #4a90e2;
 }
 
+.listings li button.toggle:hover {
+  background: #357abd;
+}
+
+.listings li button.remove {
+  background: #dc3545;
+}
+
+.listings li button.remove:hover {
+  background: #c82333;
+}
+
+.listings li span {
+  font-size: 16px;
+  color: #333;
+}
+
+.listings li .status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.listings li .status.available {
+  background: #e8f5e9;
+  color: #205e1a;
+}
+
+.listings li .status.unavailable {
+  background: #ffebee;
+  color: #dc3545;
+}
