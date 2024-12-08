@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import LoadingIcon from '../LoadingIcon.jsx'
 
 function Login() {
-  const authApi = useContext(AuthContext)
+  const { authApi } = useContext(AuthContext)
 
   const [localEmail, setLocalEmail] = useState('');
   const [localPassword, setLocalPassword] = useState('');

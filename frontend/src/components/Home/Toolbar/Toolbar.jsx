@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import './Toolbar.css'
 
 const Toolbar = () => {
-    const authApi = useContext(AuthContext)
+    const { authApi } = useContext(AuthContext)
     
     const navigate = useNavigate()
     

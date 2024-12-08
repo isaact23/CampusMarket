@@ -4,7 +4,7 @@ import LoadingIcon from '../../LoadingIcon.jsx'
 import { AuthContext } from "../../../contexts/AuthContext.jsx"
 
 const Listings = () => {
-  const authApi = useContext(AuthContext)
+  const { authApi } = useContext(AuthContext)
 
   // State to manage the list of items for sale
   const [listings, setListings] = useState([]);

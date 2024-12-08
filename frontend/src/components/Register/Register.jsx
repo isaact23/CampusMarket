@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import LoadingIcon from '../LoadingIcon.jsx'
 
 function Register() {
-  const authApi = useContext(AuthContext)
+  const { authApi } = useContext(AuthContext)
 
   const [localUsername, setLocalUsername] = useState('');
   const [localEmail, setLocalEmail] = useState('');

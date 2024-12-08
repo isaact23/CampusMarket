@@ -3,7 +3,7 @@ import "./SearchBox.css"
 import { AuthContext } from "../../../../contexts/AuthContext.jsx"
 
 const SearchBox = () => {
-  const authApi = useContext(AuthContext)
+  const { authApi } = useContext(AuthContext)
 
   const [query, setQuery] = useState(""); // User input for the search query
   const [results, setResults] = useState([]); // Search results from the backend
