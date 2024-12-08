@@ -26,7 +26,7 @@ const Toolbar = () => {
             <nav className="nav-bar">
                 <div onClick={openHome} className="nav-logo">CampusMarket</div>
                 <div className="nav-links">
-                    <p className="nav-token">Token {token}</p>
+                    <p className="nav-token">Token {authApi.getToken()}</p>
                     <SearchBox />
                     <button onClick={openHome} className="nav-button">Home</button>
                     <button onClick={openListings} className="nav-button">Listings</button>

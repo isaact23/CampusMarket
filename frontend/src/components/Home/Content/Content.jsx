@@ -4,7 +4,7 @@ const Content = () => {
     /*const [products, setProducts] = useState([])
     useEffect(() => {
         const fetchProducts = async () => {
-            const data = await get_homepage()
+            const data = await getHomepage()
             console.log(data)
             setProducts(data)
         }

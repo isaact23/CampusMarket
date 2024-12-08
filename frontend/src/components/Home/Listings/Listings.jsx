@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Listings.css'
 import LoadingIcon from '../../LoadingIcon.jsx'
 import { AuthContext } from "../../../contexts/AuthContext.jsx"

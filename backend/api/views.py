@@ -13,7 +13,7 @@ from .serializers import LoginSerializer
 from .session_manager import SessionManager
 
 database = Database()
-session_manager = SessionManager()
+session_manager = SessionManager(database)
 
 logger = logging.getLogger(__name__)
 

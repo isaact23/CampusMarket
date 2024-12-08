@@ -3,17 +3,17 @@ import { useState } from 'react'
 
 export default class AuthApi {
     constructor() {
-        [this.email, this.setEmail] = useState('')
-        [this.token, this.setToken] = useState('')
+        this.email = ''
+        this.token = ''
     }
 
     getEmail = () => this.email
     getToken = () => this.token
 
-    setEmail = (email) => this.setEmail(email)
-    setToken = (token) => this.setToken(token)
+    setEmail = (email) => this.email = email
+    setToken = (token) => this.token = token
 
-    get_homepage = async () => {
+    getHomepage = async () => {
         console.log("Getting homepage products")
     
         try {
