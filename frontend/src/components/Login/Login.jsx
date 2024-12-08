@@ -22,7 +22,7 @@ function Login() {
     setIsLoggingIn(true);
     
     authApi.login(localEmail, localPassword, (token) => {
-      authApi.setEmail(email)
+      authApi.setEmail(localEmail)
       authApi.setToken(token)
       navigate('/home')
     }, (failMessage) => {

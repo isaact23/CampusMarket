@@ -1,4 +1,6 @@
-import secrets
+import logging, secrets
+
+logger = logging.getLogger(__name__)
 
 class SessionManager:
     def __init__(self, database):
@@ -25,7 +27,7 @@ class SessionManager:
         auth_header = request.META.get('HTTP_AUTHORIZATION')
         arr = auth_header.split(',')
         if (len(arr) != 2):
-            return False
+            return None
 
         email = arr[0]
         token = arr[1]
@@ -36,6 +38,6 @@ class SessionManager:
         if user['token'] != token:
             return None
         
-        database_user = self.database.get_user(user['id'])
+        database_user = self.database.lookup_user(user['id'])
         return database_user
     

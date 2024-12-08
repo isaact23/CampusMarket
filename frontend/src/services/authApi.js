@@ -10,7 +10,7 @@ export default class AuthApi {
     getEmail = () => this.email
     getToken = () => this.token
 
-    setEmail = (email) => this.email = email
+    setEmail = (email) => {this.email = email; console.log("Set email to " + email)}
     setToken = (token) => this.token = token
 
     getHomepage = async () => {
