@@ -1,9 +1,12 @@
 // frontend/src/components/ConnectionTest.jsx
 import { useState } from 'react'
-import { api } from '../../services/api'
 import './ConnectionTest.css';
+import { AuthContext } from "../../contexts/AuthContext.jsx"
+import { useContext } from 'react'
 
 function ConnectionTest() {
+  const api = useContext(AuthContext)
+
   const [getResponse, setGetResponse] = useState(null)
   const [postResponse, setPostResponse] = useState(null)
   const [loading, setLoading] = useState(false)

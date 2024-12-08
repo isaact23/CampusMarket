@@ -2,10 +2,11 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
 import ConnectionTest from '../ConnectionTest'
-import { api } from '../../services/api'
+import { AuthApi } from '../../services/authApi'
 
 // Mock the api service
-vi.mock('../../services/api')
+vi.mock('../../services/authApi')
+authApi = new AuthApi()
 
 describe('ConnectionTest Component', () => {
     beforeEach(() => {

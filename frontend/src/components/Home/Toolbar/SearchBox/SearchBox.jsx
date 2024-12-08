@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./SearchBox.css"
-import { AuthContext } from "../../../contexts/AuthContext.jsx"
+import { AuthContext } from "../../../../contexts/AuthContext.jsx"
 
 const SearchBox = () => {
   const authApi = useContext(AuthContext)

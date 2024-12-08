@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 
-class AuthApi {
+export default class AuthApi {
     constructor() {
         [this.email, this.setEmail] = useState('')
         [this.token, this.setToken] = useState('')
