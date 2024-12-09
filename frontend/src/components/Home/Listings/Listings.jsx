@@ -61,7 +61,8 @@ const Listings = () => {
         console.log(res.product_id)
         setListings([
           ...listings,
-          { name: newItem,
+          { id: res.product_id,
+            name: newItem,
             description: "Placeholder description",
             price: price,
             available: newAvailability }
@@ -83,12 +84,11 @@ const Listings = () => {
     setWaiting(true)
     setShowError(false)
 
-    authApi.postApi('/deleteProduct/', {
+    authApi.postAuth('deleteProduct/', {
       id: id
     })
     .then(res => {
-      console.log(res)
-      newListings = listings.filter(item => item.id !== id)
+      setListings(listings.filter(item => item.id !== id))
       setWaiting(false)
     })
     .catch(err => {

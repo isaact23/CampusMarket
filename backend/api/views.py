@@ -141,6 +141,20 @@ def get_products(request):
 
     return JsonResponse({'products': products_json})
 
+@api_view(['POST'])
+def delete_product(request):
+    user = session_manager.get_authorized_user(request)
+    if user is None:
+        return Response("Access denied", status=400)
+
+    data = json.loads(request.body)
+    id = data.get('id')
+
+    if database.delete_product(id):
+        return Response({'status': 'success', 'message': 'Successfully deleted product'})
+    else:
+        return Response("Failed to delete product", status=400)
+
 
 @api_view(['GET'])
 def search(request):
