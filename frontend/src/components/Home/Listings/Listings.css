@@ -171,6 +171,10 @@
   background: #c82333;
 }
 
+.listings li button.disabled {
+  background: #bbbbbb;
+}
+
 .listings li span {
   font-size: 16px;
   color: #333;

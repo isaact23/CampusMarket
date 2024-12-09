@@ -46,8 +46,9 @@ const Listings = () => {
 
   // Handle adding a new listing
   function handleAddListing() {
-    if (newItem.trim()) {
+    if (newItem.trim() && price != '') {
       setWaiting(true)
+      setShowError(false)
       parseInt(price)
 
       authApi.postAuth('/addProduct/', {
@@ -55,9 +56,6 @@ const Listings = () => {
         description: '',
         price: price,
         available: newAvailability
-      })
-      .catch(err => {
-        setWaiting(false)
       })
       .then(res => {
         console.log(res.product_id)
@@ -72,12 +70,32 @@ const Listings = () => {
         setNewAvailability(true);
         setWaiting(false)
       })
+      .catch(err => {
+        setWaiting(false)
+        setErrorText("Something went wrong while adding the listing.")
+        setShowError(true)
+      })
     }
   }
 
   // Handle removing a listing
   const handleRemoveListing = (id) => {
-    setListings(listings.filter(item => item.id !== id));
+    setWaiting(true)
+    setShowError(false)
+
+    authApi.postApi('/deleteProduct/', {
+      id: id
+    })
+    .then(res => {
+      console.log(res)
+      newListings = listings.filter(item => item.id !== id)
+      setWaiting(false)
+    })
+    .catch(err => {
+      setWaiting(false)
+      setErrorText("Something went wrong while removing the listing.")
+      setShowError(true)
+    })
   };
 
   // Handle toggling the availability of an item
@@ -139,7 +157,7 @@ const Listings = () => {
               <button className="toggle" onClick={() => handleToggleAvailability(item.id)}>
                 Toggle Availability
               </button>
-              <button className="remove" onClick={() => handleRemoveListing(item.id)}>
+              <button className="remove" disabled={waiting} onClick={() => handleRemoveListing(item.id)}>
                 Remove
               </button>
             </li>

@@ -54,7 +54,6 @@ function Register() {
 
   return (
     <div className="register-container">
-      {authApi.getIsLoggedIn() ? <Navigate to="/home" /> : ''}
       <div className="register-box">
         <h2>Create Account</h2>
         <form onSubmit={handleRegister}>

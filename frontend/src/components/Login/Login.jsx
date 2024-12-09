@@ -52,7 +52,6 @@ function Login() {
 
   return (
     <div className="login-container">
-      {authApi.getIsLoggedIn() ? <Navigate to="/home" /> : ''}
       <div className="login-box">
         <h2>Sign in</h2>
         <form onSubmit={handleLogin}>
