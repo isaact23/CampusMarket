@@ -3,5 +3,5 @@ WORKDIR /frontend
 COPY package.json package.json
 RUN npm install
 COPY . .
-EXPOSE 443
+EXPOSE 80
 CMD ["npm", "run", "dev"]
