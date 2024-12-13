@@ -8,6 +8,10 @@
   gap: 30px; 
 }
 
+.home-content h1 {
+  color: black;
+}
+
 /* Card Styling */
 .home-card {
   background: #205e1a; 

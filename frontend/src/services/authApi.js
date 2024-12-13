@@ -90,7 +90,7 @@ export default class AuthApi {
             }
           });
           if (!response.ok) {
-            throw new ApiError(`API Error: ${response.statusText}`, response.status);
+            throw new Error(`API Error: ${response.statusText}`, response.status);
           }
           return response.json();
         } catch (error) {
@@ -112,7 +112,7 @@ export default class AuthApi {
             }
           });
           if (!response.ok) {
-            throw new ApiError(`API Error: ${response.statusText}`, response.status);
+            throw new Error(`API Error: ${response.statusText}`, response.status);
           }
           return response.json();
         } catch (error) {
@@ -131,7 +131,7 @@ export default class AuthApi {
             body: JSON.stringify(data)
           });
           if (!response.ok) {
-            throw new ApiError(`API Error: ${response.statusText}`, response.status);
+            throw new Error(`API Error: ${response.statusText}`, response.status);
           }
           return response.json();
         } catch (error) {
@@ -154,7 +154,7 @@ export default class AuthApi {
             body: JSON.stringify(data)
           });
           if (!response.ok) {
-            throw new ApiError(`API Error: ${response.statusText}`, response.status);
+            throw new Error(`API Error: ${response.statusText}`, response.status);
           }
           return response.json();
         } catch (error) {

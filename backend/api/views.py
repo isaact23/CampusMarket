@@ -40,13 +40,19 @@ def test_connection(request):
             'message': 'Data successfully received by Django!'
         })
 
-@api_view(['POST'])
+@api_view(['GET'])
 def homepage(request):
     products = database.get_homepage()
-    data = {
-        'products': products
-    }
-    return JsonResponse(data)
+    product_array = []
+    for product in products:
+        product_array.append({
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'owner_id': product.owner_id
+        })
+    return JsonResponse({'products': product_array})
 
 @api_view(['POST'])
 def login(request):

@@ -41,6 +41,7 @@ const Listings = () => {
       console.error(err)
       setErrorText('An error occurred while fetching products.')
       setShowError(true)
+      setLoading(false)
     })
   }, [])
 

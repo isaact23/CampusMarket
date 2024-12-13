@@ -1,62 +1,64 @@
+import { useState, useEffect, useContext } from 'react'
 import './Content.css'
+import { AuthContext } from "../../../contexts/AuthContext.jsx"
 
 const Content = () => {
-    /*const [products, setProducts] = useState([])
-    useEffect(() => {
-        const fetchProducts = async () => {
-            const data = await getHomepage()
-            console.log(data)
-            setProducts(data)
-        }
+  const { authApi } = useContext(AuthContext)
 
-        fetchProducts()
-    }, [])*/
+  const [listings, setListings] = useState([])
+  const [loading, setLoading] = useState(true)
 
-    var cards = []
-    cards.push(
-        <div className="home-card">
-            <h1>Dell Enterprise 2500</h1>
-        </div>
-    )
-    cards.push(
-        <div className="home-card">
-            <h1>Dell Enterprise 2600</h1>
-        </div>
-    )
-    cards.push(
-        <div className="home-card">
-            <h1>Dell Enterprise 2700</h1>
-        </div>
-    )
-    cards.push(
-        <div className="home-card">
-            <h1>Dell Enterprise 2800</h1>
-        </div>
-    )
-    cards.push(
-        <div className="home-card">
-            <h1>Dell Enterprise 2900</h1>
-        </div>
-    )
-    cards.push(
-        <div className="home-card">
-            <h1>Dell Enterprise 3000</h1>
-        </div>
-    )
+  const [showError, setShowError] = useState(false)
+  const [errorText, setErrorText] = useState('')
 
-    return (
-        <div className="home-content">
-            {cards}
+  useEffect(() => {
+    authApi.get('getHomepage/')
+      .then(res => {
+        let newListings = []
+        res.products.forEach(product => {
+          newListings.push({
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            owner_id: product.owner_id
+          })
+          setListings(newListings)
+        })
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error(err)
+        setErrorText('An error occurred while fetching the homepage.')
+        setShowError(true)
+        setLoading(false)
+      })
+  }, [])
+
+  const getErrorBox = () => {
+    if (showError) {
+      return (
+        <div className="w3-panel w3-red w3-round-large">
+          <h4 className="error-text">{errorText}</h4>
         </div>
-    )
+      )
+    }
+    return ''
+  }
+
+  return (
+    <div className="home-content">
+      {loading ? <h1>Fetching products, please wait...</h1> : ''}
+      {listings.map((product) => (
+        <div className="home-card">
+          <h1>{product.name}</h1>
+          <p>{product.description}</p>
+          <p>${product.price}</p>
+        </div>
+      ))}
+      {getErrorBox()}
+    </div>
+  )
 }
 
 export default Content
-
-
-/*{products.map((product) => (
-    <div className="home-card w3-panel w3-margin w3-card-4 w3-black">
-        <h1>{product.name}</h1>
-        <p>{product.description}</p>
-    </div>
-))}*/
