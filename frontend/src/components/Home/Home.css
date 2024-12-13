@@ -1,52 +1,85 @@
-/* home.css */
+/* Home.css */
 
 .home-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 25px;
-    transition: all 0.2s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    cursor: pointer;
-    height: 200px;
-    overflow: hidden;
- }
- 
- .home-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
- }
- 
- .home-card h1 {
-    color: #205e1a;
-    font-size: 24px;
-    font-weight: 600;
-    margin: 0;
- }
- 
- .home-card-price {
-    font-size: 22px;
-    color: #205e1a;
-    font-weight: bold;
- }
- 
- .home-card-description {
-    color: #666;
-    line-height: 1.5;
- }
- 
- .home-card-status {
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    align-self: flex-start;
-    background: #e8f5e9;
-    color: #205e1a;
- }
- 
- .home-card-status.unavailable {
-    background: #ffebee;
-    color: #dc3545;
- }
+   background: rgb(11, 139, 54);
+   border-radius: 12px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+   padding: 25px;
+   transition: all 0.2s ease-in-out;
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+   cursor: pointer;
+   height: 200px;
+   overflow: hidden;
+}
+
+.home-card:hover {
+   transform: translateY(-5px);
+   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.home-card h1 {
+   color: #205e1a;
+   font-size: 24px;
+   font-weight: 600;
+   margin: 0;
+}
+
+.home-card-price {
+   font-size: 22px;
+   color: #205e1a;
+   font-weight: bold;
+}
+
+.home-card-description {
+   color: #666;
+   line-height: 1.5;
+}
+
+.home-card-status {
+   padding: 8px 12px;
+   border-radius: 6px;
+   font-size: 14px;
+   align-self: flex-start;
+   background: #e8f5e9;
+   color: #205e1a;
+}
+
+.home-card-status.unavailable {
+   background: #ffebee;
+   color: #dc3545;
+}
+
+/* Added Styles for Home Page Background Gradient */
+
+.home {
+   /* Set the font family */
+   font-family: Arial, Helvetica, sans-serif;
+
+   /* Green gradient background */
+   background: linear-gradient(-45deg, #32CD32, #228B22, #2E8B57, #32CD32);
+   background-size: 400% 400%;
+
+   /* Animation for the moving gradient */
+   animation: gradient 15s ease infinite;
+
+   /* Ensure the home container covers the full viewport height */
+   min-height: 100vh;
+
+   /* Optional: Ensure it spans the full width */
+   width: 100%;
+}
+
+/* Keyframes for Gradient Animation */
+@keyframes gradient {
+   0% {
+       background-position: 0% 50%;
+   }
+   50% {
+       background-position: 100% 50%;
+   }
+   100% {
+       background-position: 0% 50%;
+   }
+}

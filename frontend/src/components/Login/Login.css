@@ -1,8 +1,7 @@
 /* App.css */
 
-
 .error-text {
-  color: white
+  color: white;
 }
 
 .login-container {
@@ -60,16 +59,17 @@
 .login-button {
   width: 100%;
   padding: 10px;
-  background: linear-gradient(135deg, #57c657, #2c5639); /* Gradient button */
+  background: linear-gradient(135deg, #57c657, #2c5639); /* Updated Gradient button */
   border: none;
   border-radius: 5px;
   color: white;
   font-size: 16px;
   cursor: pointer;
+  transition: background 0.3s ease; /* Added transition for smooth hover effect */
 }
 
 .login-button:hover {
-  background: linear-gradient(135deg, #5b7dfa, #916fd4);
+  background: linear-gradient(135deg, #3498db, #2980b9); /* Changed hover gradient to blue */
 }
 
 .social-login {
