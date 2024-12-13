@@ -8,11 +8,6 @@ export default class AuthApi {
     }
 
     getEmail = () => this.email
-    getToken = () => this.token
-
-    setEmail = (email) => {this.email = email; console.log("Set email to " + email)}
-    setToken = (token) => this.token = token
-
     getIsLoggedIn = () => this.isLoggedIn
 
     getHomepage = async () => {
@@ -37,8 +32,11 @@ export default class AuthApi {
                 email: email,
                 password: password
             })
+            this.email = email
+            this.token = response.data.token
+            this.isLoggedIn = true
+            onSuccess()
             console.log("Registered successfully")
-            onSuccess(response.data.token)
         } catch (error) {
             if (error.status == 400) {
                 console.log("Reigstration rejected")
@@ -59,9 +57,11 @@ export default class AuthApi {
                 email: email,
                 password: password
             })
-            console.log("Logged in successfully")
-            onSuccess(response.data.token)
+            this.token = response.data.token
+            this.email = email
             this.isLoggedIn = true
+            onSuccess()
+            console.log("Logged in successfully")
         } catch (error) {
             if (error.status == 400) {
                 console.log("Login rejected")

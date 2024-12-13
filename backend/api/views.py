@@ -56,13 +56,10 @@ def homepage(request):
 
 @api_view(['POST'])
 def login(request):
-    logger.warning("Got request to login")
-
     data = json.loads(request.body)
 
     serializer = LoginSerializer(data=request.data)
     if not serializer.is_valid():
-        logger.warning("Login request rejected: Invalid format")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     email = data.get('email')
@@ -70,12 +67,10 @@ def login(request):
 
     user = database.can_login(email, password)
     if user is None:
-        logger.warning("Login rejected by database")
         return Response("Login rejected by database", status=400)
 
     token = session_manager.add_authorized_user(user.id, user.email)
 
-    logger.warning("Login request approved")
     return Response({
         'status': 'success',
         'message': 'Login successful',

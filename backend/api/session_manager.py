@@ -11,8 +11,9 @@ class SessionManager:
 
     # Adds a session for the user and returns a token, or None if invalid.
     def add_authorized_user(self, id, email):
-        if self.users.get(email) is not None:
-            return None
+        existing_user = self.users.get(email)
+        if existing_user is not None:
+            return existing_user['token']
         
         token = secrets.token_hex(32)
 

@@ -10,8 +10,9 @@ const Listings = () => {
   const [listings, setListings] = useState([]);
   
   // State to manage input for new listings
-  const [newItem, setNewItem] = useState('');
-  const [price, setPrice] = useState('')
+  const [newItem, setNewItem] = useState('')
+  const [newDescription, setNewDescription] = useState('')
+  const [newPrice, setNewPrice] = useState('')
   const [newAvailability, setNewAvailability] = useState(true);
 
   const [loading, setLoading] = useState(true)
@@ -23,7 +24,6 @@ const Listings = () => {
   useEffect(() => {
     authApi.getAuth('/getProducts')
     .then(res => {
-      console.log(res.products)
       let newListings = []
       res.products.forEach(product => {
         newListings.push({
@@ -47,15 +47,14 @@ const Listings = () => {
 
   // Handle adding a new listing
   function handleAddListing() {
-    if (newItem.trim() && price != '') {
+    if (newItem.trim() && newDescription.trim() && newPrice != '') {
       setWaiting(true)
       setShowError(false)
-      parseInt(price)
 
       authApi.postAuth('/addProduct/', {
         name: newItem,
-        description: '',
-        price: price,
+        description: newDescription,
+        price: newPrice,
         available: newAvailability
       })
       .then(res => {
@@ -64,8 +63,8 @@ const Listings = () => {
           ...listings,
           { id: res.product_id,
             name: newItem,
-            description: "Placeholder description",
-            price: price,
+            description: newDescription,
+            price: newPrice,
             available: newAvailability }
         ]);
         setNewItem('');
@@ -128,18 +127,24 @@ const Listings = () => {
           onChange={(e) => setNewItem(e.target.value)}
           placeholder="Enter item name"
         />
+        <input
+          type="text"
+          value={newDescription}
+          onChange={(e) => setNewDescription(e.target.value)}
+          placeholder="Enter item description"
+        />
         <div className="price-input">
           <input
             type="number"
             min="1"
             step="0.01"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            value={newPrice}
+            onChange={(e) => setNewPrice(e.target.value)}
             placeholder="1.00"
           />
         </div>
         <div className="listings-available">
-          <label for="available-checkbox">Item is currently available:</label>
+          <label for="available-checkbox">Is the item available?</label>
           <input
             type="checkbox"
             id="available-checkbox"  checked={newAvailability}
@@ -155,6 +160,8 @@ const Listings = () => {
           {listings.map((item) => (
             <li key={item.id}>
               <span>{item.name} - {item.available ? 'Available' : 'Not Available'}</span>
+              <span>{item.description.slice(0, 100)}</span>
+              <span>${item.price}</span>
               <button className="toggle" onClick={() => handleToggleAvailability(item.id)}>
                 Toggle Availability
               </button>

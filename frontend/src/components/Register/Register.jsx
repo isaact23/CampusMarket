@@ -24,9 +24,7 @@ function Register() {
     setIsWaiting(true)
     setShowError(false);
 
-    authApi.register(localUsername, localEmail, localPassword, (token) => {
-      authApi.setEmail(localEmail)
-      authApi.setToken(token)
+    authApi.register(localUsername, localEmail, localPassword, () => {
       navigate('/home')
     }, (failMessage) => {
       setIsWaiting(false);
