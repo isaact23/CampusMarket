@@ -47,7 +47,7 @@ const Listings = () => {
 
   // Handle adding a new listing
   function handleAddListing() {
-    if (newItem.trim() && newDescription.trim() && newPrice != '') {
+    if (newItem.trim() && newPrice != '') {
       setWaiting(true)
       setShowError(false)
 
@@ -68,6 +68,8 @@ const Listings = () => {
             available: newAvailability }
         ]);
         setNewItem('');
+        setNewDescription('')
+        setNewPrice('')
         setNewAvailability(true);
         setWaiting(false)
       })
