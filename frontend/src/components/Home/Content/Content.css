@@ -18,9 +18,10 @@
   border-radius: 12px; 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
   padding: 25px; 
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease-in-out, color 0.3s ease-in-out; /* Smooth hover effect */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease-in-out, color 0.3s ease-in-out; 
   display: flex; 
-  flex-direction: column;
+  flex-direction: column; /* Stack items vertically */
+  justify-content: space-between; /* Push price to the bottom */
   min-height: 200px; 
 }
 
@@ -39,6 +40,21 @@
 .home-card h1 {
   color: white; 
   font-size: 24px; 
-  margin-bottom: 15px; 
+  margin-bottom: 10px; /* Adjust spacing between title and description */
   font-weight: bold;
+}
+
+/* Card Description */
+.home-card p {
+  margin: 0; /* Remove default paragraph margins */
+  color: white; 
+  font-size: 16px; 
+}
+
+/* Price Styling */
+.home-card p:last-child {
+  margin-top: auto; /* Push the price to the bottom */
+  font-weight: bold; /* Make the price more prominent */
+  color: #ffd700; /* Gold color for the price */
+  font-size: 18px; /* Slightly larger font size for the price */
 }
