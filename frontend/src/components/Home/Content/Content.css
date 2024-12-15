@@ -36,6 +36,14 @@
   color: black; 
 }
 
+.home-card:hover p {
+  color: black; /* Change color of all paragraphs to black on hover */
+}
+
+.home-card:hover p:last-child {
+  color: black; /* Change color of the last paragraph to black on hover */
+}
+
 /* Card Heading */
 .home-card h1 {
   color: white; 
