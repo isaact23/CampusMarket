@@ -18,3 +18,23 @@ services:
     build: ./frontend
     ports:
       - "80:80"
+  test-frontend:
+      build:
+        context: ./frontend
+      volumes:
+        - ./frontend:/app
+        - /app/node_modules
+      command: npm test -- --coverage --coverage.include="**/ConnectionTest.jsx"
+      depends_on:
+        - backend
+  test-backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      AZURE_PASSWORD: ${AZURE_PASSWORD}
+      DJANGO_SECRET: ${DJANGO_SECRET}
+    command: >
+      /bin/sh -c "coverage run --source=api.tests manage.py test api.tests.APIConnectionTests &&
+                  coverage report --include='api/tests.py'"
+    depends_on:
+      - backend

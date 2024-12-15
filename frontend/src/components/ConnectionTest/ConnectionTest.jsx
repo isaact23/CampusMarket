@@ -1,12 +1,11 @@
 // frontend/src/components/ConnectionTest.jsx
-import { useState } from 'react'
-import './ConnectionTest.css';
-import { AuthContext } from "../../contexts/AuthContext.jsx"
-import { useContext } from 'react'
+import { useState, useContext } from 'react'
+import './ConnectionTest.css'
+import { AuthContext } from "../../contexts/AuthContext"
 
 function ConnectionTest() {
-  const api = useContext(AuthContext)
-
+  const { authApi } = useContext(AuthContext)
+  
   const [getResponse, setGetResponse] = useState(null)
   const [postResponse, setPostResponse] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -16,7 +15,7 @@ function ConnectionTest() {
     setLoading(true)
     setError(null)
     try {
-      const data = await api.get('test/')
+      const data = await authApi.get('test/')
       setGetResponse(data)
     } catch (err) {
       setError(err.message)
@@ -28,7 +27,7 @@ function ConnectionTest() {
     setLoading(true)
     setError(null)
     try {
-      const data = await api.post('test/', {
+      const data = await authApi.post('test/', {
         testData: 'Hello from React!',
         timestamp: new Date().toISOString()
       })
@@ -86,7 +85,7 @@ function ConnectionTest() {
         </p>
       </div>
     </div>
-  );
+  )
 }
 
-export default ConnectionTest;
+export default ConnectionTest
